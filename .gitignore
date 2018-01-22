@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/DirectX Engine 22-01-18/Debug
+/DirectX Engine 22-01-18/DirectXEngine/Debug
+/DirectX Engine 22-01-18/DirectXEngine/DirectXEngine/Debug
+/DirectX Engine 22-01-18/DirectXEngine/Release
+/DirectX Engine 22-01-18/DirectXEngine/x64/Debug
+/DirectX Engine 22-01-18/Release
+*.db
+*.opendb

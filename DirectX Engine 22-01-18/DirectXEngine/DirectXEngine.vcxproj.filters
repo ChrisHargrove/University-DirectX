@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{9ea2d5a1-9bbf-483d-8bd0-90bcf57f11e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Buffers">
+      <UniqueIdentifier>{8e401458-a666-407d-864c-bb804d4f0065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Managers">
+      <UniqueIdentifier>{aaaef938-2bed-42fd-b9ac-126fa744e3eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{29c5a515-7908-4758-8c54-905a7412b8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Tools">
+      <UniqueIdentifier>{53a1077e-86d5-4c02-84c1-ef3b59345fe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Tools\FileLoaders">
+      <UniqueIdentifier>{32c210e8-9a31-43ce-9748-50a10fad3508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\DirectX">
+      <UniqueIdentifier>{45e8de7f-e594-4f1c-8444-040849d881ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\GameObjects">
+      <UniqueIdentifier>{a22eeabc-b022-4ef6-96f0-f8ef76745c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Graphics">
+      <UniqueIdentifier>{d66ea49b-2f79-4d49-9a1c-daa72245d251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{ef0c0aa3-cc8a-4e7b-a315-636182406da3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Buffers">
+      <UniqueIdentifier>{1a35c87e-fcfd-4b47-b509-fd0791792578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\DirectX">
+      <UniqueIdentifier>{b3477145-b67e-4152-95af-5a1e6833d1bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Tools">
+      <UniqueIdentifier>{8e77d13f-beb8-4bed-87f4-89620b4566e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{25abe46e-bdac-40b5-a85c-c8c0bbcdb029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Tools\FileLoaders">
+      <UniqueIdentifier>{5456e96f-41f7-4bac-b8f0-78943aa3aee1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Graphics">
+      <UniqueIdentifier>{fc4d6cc3-0c51-413d-90bf-6a232f50f402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Managers">
+      <UniqueIdentifier>{1c342217-8d84-4f9a-be47-4f0426aee5f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\GameObject">
+      <UniqueIdentifier>{cb93513a-9345-43db-bd05-7045c759dc38}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Source Files\Engine\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="DXApplication.cpp">
+      <Filter>Source Files\Engine\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="DXInput.cpp">
+      <Filter>Source Files\Engine\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Source Files\Engine\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Source Files\Engine\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="objLoader.cpp">
+      <Filter>Source Files\Engine\Tools\FileLoaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Game\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Game\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>Source Files\Engine\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Game\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstPersonCamera.cpp">
+      <Filter>Source Files\Game\GameObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Buffer.h">
+      <Filter>Header Files\Engine\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>Header Files\Engine\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="AlignedAllocationPolicy.h">
+      <Filter>Header Files\Engine\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Header Files\Engine\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>Header Files\Engine\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="DXApplication.h">
+      <Filter>Header Files\Engine\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="DXInput.h">
+      <Filter>Header Files\Engine\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="objLoader.h">
+      <Filter>Header Files\Engine\Tools\FileLoaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>Header Files\Engine\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstPersonCamera.h">
+      <Filter>Header Files\Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Game\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Game\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
