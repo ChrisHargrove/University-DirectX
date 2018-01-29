@@ -1,5 +1,4 @@
-#ifndef LOG_H_
-#define LOG_H_
+#pragma once
 
 /*******************************************************************************************************************
 	Log.h, Log.cpp
@@ -25,7 +24,7 @@
 #include <string>
 #include <sstream>
 
-#define EMPTY -1
+#define DX_LOG_EMPTY -1
 
 /*******************************************************************************************************************
 	Macros have been defined for differentiating between Debug and Release modes.
@@ -34,9 +33,9 @@
 	You could also use ASSERT(function) if(!(function)) __debugbreak(); to generate a breakpoint.
 *******************************************************************************************************************/
 #if DEBUG_MODE == 1
-	#define Log(message, variable, type) Debug(message, variable, type)
+	#define DX_LOG(message, variable, type) Debug(message, variable, type)
 #elif defined(RELEASE_MODE)
-	#define Log(message, variable, type)
+	#define DX_LOG(message, variable, type)
 #endif
 
 /*******************************************************************************************************************
@@ -62,8 +61,8 @@ template <typename T> inline void Debug(const std::string& message, T variable, 
 	tempVariable << variable; 
 	
 	//---------------------------------------------------------------- If variable is EMPTY, just return the message. Otherwise, concatenate the strings
-	if (variable != (T)EMPTY)	{ outputString = message + tempVariable.str(); } 
-	else						{ outputString = message; }
+	if (variable != (T)DX_LOG_EMPTY)	{ outputString = message + tempVariable.str(); } 
+	else								{ outputString = message; }
 
 	//---------------------------------------------------------------- Switch to check the passed in LogType and output the passed in message and/or variable (complete with pretty colours), to make debugging easy and fast
 	switch (type)  {
@@ -77,5 +76,3 @@ template <typename T> inline void Debug(const std::string& message, T variable, 
 		case LOG_RESOURCE:	{ Colour(BLUE); std::cout << "[RESOURCE] " << outputString << std::endl; break; }
 	}
 }
-
-#endif

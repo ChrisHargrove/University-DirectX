@@ -46,7 +46,7 @@ void Animation::Load(char* FileName, ID3D11Device* Device)
 		char* temp = (char*)NewFileName.c_str();
 
 		_Models.push_back(new Model());
-		_Models[i]->Load(temp, Device);
+		_Models[i]->Load(temp);
 	}
 }
 

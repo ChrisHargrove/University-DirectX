@@ -1,5 +1,4 @@
-#ifndef PLAY_STATE_H_
-#define PLAY_STATE_H_
+#pragma once
 
 /*******************************************************************************************************************
 	PlayState.h, PlayState.cpp
@@ -19,15 +18,10 @@ public:
 	virtual ~PlayState();
 
 public:
-	virtual bool Update() override;
-	virtual bool Draw() override;
+	virtual void Update(float deltaTime) override;
+	virtual void Draw() override;
 	
 private:
 	bool Initialize();
 	void IsWindowClosed();
-
-	//For demonstration of an orthographic projection only
-	Terrain* terrainPlaneExample;
 };
-
-#endif

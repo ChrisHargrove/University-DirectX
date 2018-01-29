@@ -1,6 +1,7 @@
 #include "Model.h"
+#include "GraphicsManager.h"
 #include "objLoader.h"
-
+#include "Log.h"
 
 Model::Model()	:	m_stride(sizeof(PackedVertex)),
 					m_offset(0)
@@ -14,7 +15,7 @@ Model::~Model()
 
 }
 
-bool Model::Load(char* FileName, ID3D11Device* device)
+bool Model::Load(const char* fileLocation)
 {
 	std::vector<XMFLOAT3> vertices;
 	std::vector<XMFLOAT2> textureCoords;
@@ -22,10 +23,10 @@ bool Model::Load(char* FileName, ID3D11Device* device)
 	std::vector<unsigned int> indices;
 
 	//Create Obj Model to load to.
-	ObjLoader model;
+	ObjLoader objLoader;
 
-	if (!model.LoadObjFile(FileName, vertices, textureCoords, normals, indices)) {
-		//DXTRACE_MSG("Error loading 3D model!");
+	if (!objLoader.LoadObjFile(fileLocation, vertices, textureCoords, normals, indices)) {
+		DX_LOG("[MODEL] Couldn't load OBJ file: ", fileLocation, LOG_ERROR);
 		return false;
 	}
 	
@@ -37,15 +38,15 @@ bool Model::Load(char* FileName, ID3D11Device* device)
 		packedVertex[i].normal = normals[i];
 	}
 
-	m_buffer.Push(device, packedVertex);
-	m_buffer.Push(device, indices);
+	m_buffer.Push(packedVertex);
+	m_buffer.Push(indices);
 }
 
 
-void Model::Render(ID3D11DeviceContext* deviceContext) const
+void Model::Render() const
 {
-	deviceContext->IASetVertexBuffers(0, 1, m_buffer.GetVertexBuffer(), &m_stride, &m_offset);
-	deviceContext->IASetIndexBuffer(*m_buffer.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, m_offset);
-
-	deviceContext->DrawIndexed(m_buffer.GetIndexCount(), 0, 0);
+	//RENDER SHADER
+	Graphics::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, m_buffer.GetVertexBuffer(), &m_stride, &m_offset);
+	Graphics::Instance()->GetDeviceContext()->IASetIndexBuffer(*m_buffer.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, m_offset);
+	Graphics::Instance()->GetDeviceContext()->DrawIndexed(m_buffer.GetIndexCount(), 0, 0);
 }

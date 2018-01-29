@@ -1,10 +1,10 @@
-#ifndef SINGLETON_H_
-#define SINGLETON_H_
+#pragma once
 
 /*******************************************************************************************************************
 	Singleton.h, Singleton.cpp
 	Created by Kim Kane
 	Last updated: 06/01/2018
+	Class finalized: 18/01/1018
 
 	A thread-safe singleton class that generates one instance of a template object on the heap.
 	
@@ -35,8 +35,8 @@
 #include <Windows.h>
 #include <memory>
 
-class CriticalSection : public CRITICAL_SECTION
-{
+class CriticalSection : public CRITICAL_SECTION {
+
 public:
 	CriticalSection()	{ InitializeCriticalSection(this); }
 	~CriticalSection()	{ DeleteCriticalSection(this); }
@@ -47,8 +47,8 @@ private:
 };
 
 template <class T>
-class Singleton
-{
+class Singleton {
+
 public:
 	static T* Instance();
 
@@ -77,5 +77,3 @@ template <class T> T* Singleton<T>::Instance()
 
 	return s_singletonObject.get();
 }
-
-#endif

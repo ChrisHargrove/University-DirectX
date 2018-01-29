@@ -9,7 +9,7 @@
 FileManager::FileManager()	:	m_theFile(""),
 								m_fileData("")
 {
-	Log("[FILE] File constructor initialized", EMPTY, LOG_MESSAGE);
+	DX_LOG("[FILE] File constructor initialized", DX_LOG_EMPTY, LOG_MESSAGE);
 }
 
 
@@ -20,10 +20,10 @@ bool FileManager::OpenForReading(const char* fileLocation)
 {
 	m_theFile.open(fileLocation, std::ifstream::in);
 
-	if (!m_theFile.is_open())	{ Log("[FILE] File doesn't exist: ", fileLocation, LOG_ERROR); return false; }
-	if (!m_theFile.good())		{ Log("[FILE] File corrupted or a file is already open: ", fileLocation, LOG_ERROR); return false; }
+	if (!m_theFile.is_open())	{ DX_LOG("[FILE] File doesn't exist: ", fileLocation, LOG_ERROR); return false; }
+	if (!m_theFile.good())		{ DX_LOG("[FILE] File corrupted or a file is already open: ", fileLocation, LOG_ERROR); return false; }
 
-	Log("[FILE] File opened successfully: ", fileLocation, LOG_SUCCESS);
+	DX_LOG("[FILE] File opened successfully: ", fileLocation, LOG_SUCCESS);
 
 	return true;
 }
@@ -36,7 +36,7 @@ void FileManager::Close(const char* fileLocation) {
 
 	m_theFile.close();
 
-	Log("[FILE] File closed successfully: ", fileLocation, LOG_SUCCESS);
+	DX_LOG("[FILE] File closed successfully: ", fileLocation, LOG_SUCCESS);
 }
 
 
@@ -106,7 +106,7 @@ bool FileManager::GetObjectData(const std::string &objectName) {
 			AddDataToContainer();
 		}
 		else if (FileDataContains(FileConstants::EndOfFile) && !objectFound) {
-			Log("[FILE] Object not found in file: ", objectName.c_str(), LOG_ERROR);
+			DX_LOG("[FILE] Object not found in file: ", objectName.c_str(), LOG_ERROR);
 			m_theFile.close();
 			return false;
 		}
@@ -136,13 +136,13 @@ void FileManager::PrintObjectData() {
 	
 	if (!m_objectData.empty()) {
 
-		Log("The following object data was stored: ", EMPTY, LOG_MESSAGE);
+		DX_LOG("The following object data was stored: ", DX_LOG_EMPTY, LOG_MESSAGE);
 
 		for (auto const& object : m_objectData) {
-			Log("Key: ", object.first.c_str(), LOG_MESSAGE);
-			Log("Value: ", object.second.c_str(), LOG_MESSAGE);
+			DX_LOG("Key: ", object.first.c_str(), LOG_MESSAGE);
+			DX_LOG("Value: ", object.second.c_str(), LOG_MESSAGE);
 		}
 	}
 
-	else { Log("[FILE] Object data container is empty", EMPTY, LOG_WARN); }
+	else { DX_LOG("[FILE] Object data container is empty", DX_LOG_EMPTY, LOG_WARN); }
 }

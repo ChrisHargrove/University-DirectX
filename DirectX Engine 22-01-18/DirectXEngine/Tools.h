@@ -1,5 +1,4 @@
-#ifndef TOOLS_H_
-#define TOOLS_H_
+#pragma once
 
 /*******************************************************************************************************************
 	Tools.h, Tools.cpp
@@ -16,6 +15,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <d3d11.h>
+#include <xnamath.h>
 
 //*************************************
 //string case functions
@@ -57,4 +58,5 @@ template <typename T> std::ostream& Debug(T str) {
 //temp function being used in pipeline manager - DELETE!
 std::string AddString(const std::string& a, const std::string& b);
 
-#endif
+XMFLOAT3 VectorToFloat(const XMVECTOR& vectorToConvert);
+XMVECTOR FloatToVector(const XMFLOAT3& floatToConvert);

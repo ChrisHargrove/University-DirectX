@@ -1,8 +1,7 @@
-#ifndef OBJ_LOADER_H_
-#define OBJ_LOADER_H_
+#pragma once
 
 /*******************************************************************************************************************
-	OBJLoader.h, OBJLoader.cpp
+	ObjLoader.h, ObjLoader.cpp
 	Created by Kim Kane
 	Last updated: 09/01/2018
 
@@ -63,5 +62,3 @@ template <typename T> void ObjLoader::CalibrateIndices(std::vector<T>& inData, s
 		finalData.push_back(inData[finalIndices[i] - 1]);
 	}
 }
-
-#endif
