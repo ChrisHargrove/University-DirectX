@@ -9,7 +9,7 @@
 *******************************************************************************************************************/
 ObjLoader::ObjLoader()
 {
-	Log("[OBJ LOADER] OBJ Loader constructor initialized", EMPTY, LOG_MESSAGE);
+	DX_LOG("[OBJ LOADER] OBJ Loader constructor initialized", DX_LOG_EMPTY, LOG_MESSAGE);
 }
 
 
@@ -18,7 +18,7 @@ ObjLoader::ObjLoader()
 *******************************************************************************************************************/
 ObjLoader::~ObjLoader()
 {
-	Log("[OBJ LOADER] OBJ Loader destructor initialized", EMPTY, LOG_MESSAGE);
+	DX_LOG("[OBJ LOADER] OBJ Loader destructor initialized", DX_LOG_EMPTY, LOG_MESSAGE);
 }
 
 

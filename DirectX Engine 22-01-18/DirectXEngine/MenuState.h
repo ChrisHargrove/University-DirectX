@@ -1,5 +1,4 @@
-#ifndef MENU_STATE_H_
-#define MENU_STATE_H_
+#pragma once
 
 /*******************************************************************************************************************
 	MenuState.h, MenuState.cpp
@@ -7,15 +6,15 @@
 	Last updated: 06/01/2018
 
 	Initializes a menu state within the game.
-	Objects are created here just for demonstration.
 
 *******************************************************************************************************************/
 #include "GameState.h"
 
-#include "Mesh.h"
-#include "GameObject.h"
-
 #include "Terrain.h"
+
+#include "GameObject.h"
+#include "Model.h"
+#include "Texture.h"
 
 class MenuState : public GameState {
 
@@ -24,36 +23,22 @@ public:
 	virtual ~MenuState();
 
 public:
-	virtual bool Update() override;
-	virtual bool Draw() override;
+	virtual void Update(float deltaTime) override;
+	virtual void Draw() override;
 	
-private:
-	//---------------------------------------------------------------- Testing functions for demonstration only
-	void InputTesting();
-
 private:
 	bool Initialize();
 	void IsWindowClosed();
 
-	//---------------------------------------------------------------- Example mesh objects
-	Mesh meshLaraExample;
-	Mesh meshCubeExample;
-	Mesh meshFontExample;
-	Mesh meshSphereExample;
-	Mesh meshPyramidExample;
+private:
+	Terrain* m_terrain;
 
-	//---------------------------------------------------------------- Example Game Objects
-	GameObject* gameObjectLaraExample;
-	GameObject* gameObjectCubeExample;
-	GameObject* gameObjectFontExample;
-	GameObject* gameObjectSphereExample;
-	GameObject* gameObjectPyramidExample;
+	Model m_laraModel;
+	Model m_cubeModel;
 
-	GameObject* rootObjectExample;
+	Texture m_laraTexture;
+	Texture m_cubeTexture;
 
-	//---------------------------------------------------------------- Example terrain
-	Terrain* terrainPlaneExample;
-	Terrain* terrainGridExample;
+	GameObject* m_laraObject;
+	GameObject* m_cubeObject;
 };
-
-#endif

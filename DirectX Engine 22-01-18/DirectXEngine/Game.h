@@ -1,53 +1,52 @@
-#ifndef GAME_H_
-#define GAME_H_
+#pragma once
 
-#include "DXApplication.h"
-#include "GameObject.h"
-#include "FirstPersonCamera.h"
-#include "Model.h"
+/*******************************************************************************************************************
+	Game.h, Game.cpp
+	Created by Kim Kane
+	Last updated: 27/01/2018
 
-class Game : public DXApplication
-{
+	A singleton class that sets up and initializes the main game.
+
+*******************************************************************************************************************/
+
+#include <deque>
+
+#include "Singleton.h"
+#include "Tracker.h"
+#include "GameState.h"
+#include "MenuState.h"
+#include "PlayState.h"
+
+/* NOTE: Any new game state .h files must be included here */
+
+class Game {
+
 public:
-	Game(HINSTANCE hInstance, const char* title, int clientWidth, int clientHeight);
-	~Game();
+	friend class Singleton<Game>;
 
-	//The override keyword throws error if it's not actually an overwritable method
-	bool Initialize() override;
-	void Shutdown() override;
+public:
+	bool Initialize(HINSTANCE instance, LPCSTR title, bool fullScreen, bool vSync);
+	void Shutdown();
+	bool Run();
 
-protected:
-	bool Update(float dt) override;
-	void Render(float dt) override;
-
-private:
-	bool LoadResources();
-	void ClearScreen();
-
-	HRESULT SetupConstantBuffers();
-	HRESULT SetupAlphaBlending();
-
-	void AlphaBlendingState(bool state = false);
-	void ZBufferState(bool state = false);
+public:
+	void TemporaryState(GameState* state);
+	void PermanentState(GameState* state);
 
 private:
-	Model		LaraModel;
-	Model		CubeModel;
-	
-	Texture		LaraTexture;
-	Texture		CubeTexture;
+	Game();
+	Game(const Game&);
+	Game& operator=(const Game&) {}
 
-	GameObject* LaraObject;
-	GameObject* CubeObject;
+private:
+	void RemoveState();
 
-	ID3D11Buffer* m_viewBuffer; //Camera class
-	ID3D11Buffer* m_projectionBuffer;  //Camera class
-	ID3D11Buffer* m_cameraPositionBuffer; //Camera class
-	ID3D11Buffer* m_worldBuffer; //Transform hierarchy for game objects
-	
-	XMMATRIX m_projectionMatrix; //Camera class
+private:
+	bool		m_endGame;
+	GameState*	m_state;
 
-	FirstPersonCamera m_firstPersonCamera;
+private:
+	std::deque<GameState*> m_gameStates;
 };
 
-#endif
+typedef Singleton<Game> MainGame;

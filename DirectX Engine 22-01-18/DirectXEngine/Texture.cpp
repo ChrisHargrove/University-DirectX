@@ -1,47 +1,44 @@
 #include "Texture.h"
-#include "D3DX11tex.h"
-#include "Memory.h"
+#include <d3dx11tex.h>
+#include "GraphicsManager.h"
+#include "Log.h"
 
-Texture::Texture()
+Texture::Texture()	:	m_colorMap(nullptr),
+						m_colorMapSampler(nullptr)
 {
+
 }
+
 
 Texture::~Texture()
 {
+	if (m_colorMapSampler)	m_colorMapSampler->Release(); m_colorMapSampler = nullptr;
+	if (m_colorMap)			m_colorMap->Release(); m_colorMap = nullptr;
 }
 
-bool Texture::LoadTexture(const char* fileLocation, ID3D11Device* device)
+
+bool Texture::LoadTexture(const char* fileLocation)
 {
 	HRESULT result = S_OK;
 
-	result = D3DX11CreateShaderResourceViewFromFile(device, fileLocation, 0, 0, &m_colorMap, 0);
-	if (FAILED(result))
-	{
-		//DXTRACE_MSG("Failed to load the texture image!");
-		return false;
-	}
-	
-	D3D11_SAMPLER_DESC colorMapDesc;
-	ZeroMemory(&colorMapDesc, sizeof(colorMapDesc));
-	colorMapDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	colorMapDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	colorMapDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	colorMapDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	colorMapDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	result = D3DX11CreateShaderResourceViewFromFile(Graphics::Instance()->GetDevice(), fileLocation, 0, 0, &m_colorMap, 0);
+	if (FAILED(result)) { DX_LOG("[TEXTURE] Failed to create texture: ", fileLocation, LOG_ERROR); return false; }
+
+	D3D11_SAMPLER_DESC colorMapDescription = {};
+	colorMapDescription.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	colorMapDescription.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	//colorMapDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	colorMapDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	colorMapDescription.MaxLOD = D3D11_FLOAT32_MAX;
 
-	result = device->CreateSamplerState(&colorMapDesc, &m_colorMapSampler);
+	result = Graphics::Instance()->GetDevice()->CreateSamplerState(&colorMapDescription, &m_colorMapSampler);
 
-	if (FAILED(result)){
-		//DXTRACE_MSG("Failed to create color map sampler state!");
+	if (FAILED(result)) {
+		DX_LOG("[TEXTURE] Failed to create colour map sampler state", DX_LOG_EMPTY, LOG_ERROR);
 		return false;
 	}
-	return true;
-}
 
-void Texture::UnloadTexture()
-{
-	if (m_colorMapSampler) SafeRelease(m_colorMapSampler);
-	if (m_colorMap) SafeRelease(m_colorMap);
+	return true;
 }

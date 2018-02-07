@@ -1,5 +1,4 @@
-#ifndef FILE_MANAGER_H_
-#define FILE_MANAGER_H_
+#pragma once
 
 /*******************************************************************************************************************
 	FileManager.h, FileManager.cpp
@@ -54,8 +53,6 @@ private:
 };
 
 typedef Singleton<FileManager> File;
-
-#endif
 
 /*
 //void ExtractBinaryData(int data);

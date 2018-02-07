@@ -1,27 +1,27 @@
-#ifndef CONSTANTS_H_
-#define CONSTANTS_H_
+#pragma once
 
 /*******************************************************************************************************************
 	Constants.h, Constants.cpp
 	Created by Kim Kane
-	Last updated: 04/01/2018
+	Last updated: 27/01/2018
 
 	Temporary header file to store all of the engine constant values.
 	Eventually, these will be loaded in from files.
 
 *******************************************************************************************************************/
+#include <string>
 
 namespace FileConstants {
 
-	const std::string LineBreak = "-";
-	const std::string Divider = ":";
-	const std::string ObjectBegin = "TYPE >>";
-	const std::string ObjectEnd = "----------END----------";
-	const std::string EndOfFile = "<";
-	const std::string Vertices = "v ";
+	const std::string LineBreak		= "-";
+	const std::string Divider		= ":";
+	const std::string ObjectBegin	= "TYPE >>";
+	const std::string ObjectEnd		= "----------END----------";
+	const std::string EndOfFile		= "<";
+	const std::string Vertices		= "v ";
 	const std::string TextureCoords = "vt ";
-	const std::string Normals = "vn ";
-	const std::string Faces = "f ";
+	const std::string Normals		= "vn ";
+	const std::string Faces			= "f ";
 
 	enum OffsetType { 
 		OBJECT_TITLE_OFFSET			= 8,
@@ -29,32 +29,51 @@ namespace FileConstants {
 		VERTICES_TITLE_OFFSET		= 2,
 		TEXTURE_COORDS_TITLE_OFFSET = 3,
 		NORMALS_TITLE_OFFSET		= 3,
-		FACES_TITLE_OFFSET			= 2
+		FACES_TITLE_OFFSET			= 2,
+		RGB_OFFSET					= 3,
+		HEIGHTMAP_VERTICES			= 12
 	};
 }
 
 namespace InputConstants {
 
 	enum TotalButtons {
-		TOTAL_MOUSE_BUTTONS			= 4,
-		TOTAL_CONTROLLER_BUTTONS	= 14
+		TOTAL_KEYS	= 256
 	};
 
-	const std::string SupportedGuid = "4c05c405000000000000504944564944";
-	const int BufferSize = 33;
-	const int DeadZone = 8000;
-	const float Speed = 0.1f;
-	const float RotateSpeed = 0.01f;
+	enum MouseButtons {
+		LEFT		= 0,
+		RIGHT		= 1,
+		MIDDLE		= 2
+	};
+
+	const float Speed		= 0.1f;
+	const float RotateSpeed = 0.1f;
 }
+
 
 namespace ScreenConstants {
 
 	enum WindowSpec {
-		SCREEN_WIDTH = 800,
-		SCREEN_HEIGHT = 600,
-		OPENGL_VERSION = 4,
-		OPENGL_SUBVERSION = 0
+		SCREEN_WIDTH	= 800,
+		SCREEN_HEIGHT	= 600
+	};
+
+	const float FieldOfView		= (float)3.141592654f / 4.0f;
+	const float NearView		= 0.1f;
+	const float FarView			= 100.0f;
+}
+
+
+namespace GraphicConstants {
+
+	enum GraphicSettings {
+		BUFFER_SIZE		= 128
 	};
 }
 
-#endif
+
+namespace MathsConstants {
+	
+	const float Radians = 0.0174532925f;
+}

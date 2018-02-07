@@ -1,0 +1,49 @@
+/*******************************************************************************************************************
+	Constant buffer data coming in from the CPU
+*******************************************************************************************************************/
+cbuffer PixelBuffer
+{
+    float4 pixelColor;
+};
+
+
+/*******************************************************************************************************************
+	Global data coming in from CPU
+*******************************************************************************************************************/
+Texture2D shaderTexture;
+SamplerState SampleType;
+
+
+/*******************************************************************************************************************
+	Data coming in from vertex shader
+*******************************************************************************************************************/
+struct PixelOutput
+{
+    float4 position : SV_POSITION;
+    float2 tex		: TEXCOORD0;
+};
+
+
+/*******************************************************************************************************************
+	Main Function
+*******************************************************************************************************************/
+float4 PixelMain(PixelOutput pixelOutput) : SV_TARGET
+{
+	float4 color;
+	
+	//-------------------------------------------- Sample the texture pixel at this location
+	color = shaderTexture.Sample(SampleType, pixelOutput.tex);
+	
+	//-------------------------------------------- If the color is black on the texture then treat this pixel as transparent
+	if(color.r == 0.0f) { color.a = 0.0f; }
+	
+	//-------------------------------------------- If the color is other than black on the texture then this is a pixel in the font so draw it using the font pixel color
+	else
+	{
+		color.a = 1.0f;
+		color = color * pixelColor;
+	}
+
+	//-------------------------------------------- Send the data to the screen
+    return color;
+}

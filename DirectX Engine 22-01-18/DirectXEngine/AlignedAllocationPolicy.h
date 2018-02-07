@@ -1,5 +1,4 @@
-#ifndef ALIGNED_ALLOCATION_POLICY_H_
-#define ALIGNED_ALLOCATION_POLICY_H_
+#pragma once
 
 const size_t Byte8	= 8;
 const size_t Byte16 = 16;
@@ -10,5 +9,3 @@ public:
 	inline static void* operator new(size_t size)		{ return _aligned_malloc(size, Alignment); }
 	inline static void operator delete(void* memory)	{ _aligned_free(memory); }
 };
-
-#endif
