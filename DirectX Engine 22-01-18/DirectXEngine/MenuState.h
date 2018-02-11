@@ -16,6 +16,8 @@
 #include "Model.h"
 #include "Texture.h"
 
+#include "Actor.h"
+
 class MenuState : public GameState {
 
 public:
@@ -39,6 +41,6 @@ private:
 	Texture m_laraTexture;
 	Texture m_cubeTexture;
 
-	GameObject* m_laraObject;
-	GameObject* m_cubeObject;
+	Actor* m_laraObject;
+	//GameObject* m_cubeObject;
 };

@@ -17,7 +17,7 @@ AnimatedGameObject::~AnimatedGameObject()
 void AnimatedGameObject::Update(float delta)
 {
 	_Animations.at(_CurrentAnim)->Update(delta);
-	_ObjectModel = _Animations.at(_CurrentAnim)->GetCurrentFrame();
+    SetModel(_Animations.at(_CurrentAnim)->GetCurrentFrame());
 }
 
 void AnimatedGameObject::AddAnimation(std::string name,Animation * anim)
