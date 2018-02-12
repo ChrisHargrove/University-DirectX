@@ -11,3 +11,4 @@
 /DirectX Engine 22-01-18/Release
 *.db
 *.opendb
+*.ipch
