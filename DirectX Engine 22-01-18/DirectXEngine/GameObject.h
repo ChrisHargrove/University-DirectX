@@ -9,12 +9,13 @@
 #include "AlignedAllocationPolicy.h"
 #include "Model.h"
 #include "Texture.h"
+#include "BasicShader.h"
 
-class GameObject : public AlignedAllocationPolicy<Byte16>
+class GameObject : public AlignedAllocationPolicy<BYTE_16>
 {
 public:
 	GameObject();
-	GameObject(XMVECTOR Position, Model* Model, Texture* texture);
+	GameObject(XMFLOAT3 Position, Model* Model, Texture* texture);
 	~GameObject();
 
 	XMVECTOR GetPosition() const;
@@ -26,11 +27,15 @@ public:
 	void RotateY(float angle);
 	void TranslateX(float distance);
 	void TranslateY(float distance);
+	void TranslateZ(float distance);
 
 	void UpdateWorldMatrix();
 
-	void Update(ID3D11DeviceContext* deviceContext);
-	void Render(ID3D11DeviceContext* deviceContext);
+	void Update();
+	void Render(Camera* camera);
+
+protected:
+	Model*			_ObjectModel;
 
 private:
 	const XMVECTOR DEFAULT_UP = XMVectorSet( 0.0f, 1.0f, 0.0f , 0.0f);
@@ -42,10 +47,10 @@ private:
 	XMMATRIX _RotationY;
 	XMMATRIX _WorldMatrix;
 
-	Model*			_ObjectModel;
 	Texture*		m_objectTexture;
 	ID3D11Buffer*	m_worldBuffer;
 
+	BasicShader		m_basicShader;
 };
 
 #endif

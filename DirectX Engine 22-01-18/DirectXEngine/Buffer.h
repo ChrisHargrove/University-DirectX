@@ -1,18 +1,16 @@
-#ifndef BUFFER_H_
-#define BUFFER_H_
+#pragma once
 
 /*******************************************************************************************************************
 	Buffer.h, Buffer.cpp
 	Created by Kim Kane
-	Last updated: 04/01/2018
+	Last updated: 09/02/2018
 
-	Creates an OpenGL buffer object, which we can use to send data to the graphics card.
+	Creates a DirectX buffer object, which we can use to send data to the graphics card.
 
 *******************************************************************************************************************/
 #include <d3d11.h>
 #include <vector>
-#include "objLoader.h"
-#include <DxErr.h>
+#include "Constants.h"
 
 class Buffer {
 
@@ -27,11 +25,26 @@ public:
 	ID3D11Buffer* const* GetVertexBuffer() const;
 	ID3D11Buffer* const* GetIndexBuffer() const;
 
-	bool Push(ID3D11Device* device, const std::vector<unsigned int>& indices);
-	bool Push(ID3D11Device* device, const std::vector<PackedVertex>& vertexData);
+public:
+	void SetTerrainVertexCount(unsigned int vertexCount);
+	void SetTerrainIndexCount(unsigned int indexCount);
 
 public:
-	void Destroy();
+	bool Push(const std::vector<BufferConstants::PackedVertex>& vertices);
+	bool Push(const std::vector<unsigned int>& indices);
+
+	bool Push(const std::vector<BufferConstants::PackedTerrainVertex>& vertices);
+	bool Push(const std::vector<unsigned long>& indices);
+
+public:
+	void Render(unsigned int stride, unsigned int offset) const;
+
+public:
+	static bool LockConstantBuffer(ID3D11Buffer* constantBuffer, D3D11_MAPPED_SUBRESOURCE& mappedResource);
+	static void UnlockConstantBuffer(ID3D11Buffer* constantBuffer);
+	static void SetVertexConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer);
+	static void SetPixelConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer);
+	static bool CreateConstantBuffer(ID3D11Buffer** constantBuffer, UINT bufferByteSize);
 
 private:
 	Buffer(const Buffer& other);
@@ -43,5 +56,3 @@ private:
 	unsigned int	m_vertexCount;
 	unsigned int	m_indexCount;
 };
-
-#endif

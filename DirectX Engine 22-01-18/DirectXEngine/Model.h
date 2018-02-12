@@ -10,9 +10,9 @@ public:
 	Model();
 	~Model();
 
-	bool Load(char* FileName, ID3D11Device* Device);
+	bool Load(const char* fileLocation);
 
-	void Render(ID3D11DeviceContext* deviceContext) const;
+	void Render() const;
 	void Update(); //May not need
 
 private:

@@ -1,17 +1,27 @@
 #include "GameObject.h"
+#include "GraphicsManager.h"
 
 GameObject::GameObject() 
 {
 }
 
-GameObject::GameObject(XMVECTOR Position, Model* Model, Texture* texture)
+GameObject::GameObject(XMFLOAT3 Position, Model* Model, Texture* texture)
 {
-	_Position = Position;
+	//_Position = Position;
 	_Direction = DEFAULT_FORWARD;
 	_RotationY = XMMatrixIdentity();
 	_WorldMatrix = XMMatrixIdentity();
 	_ObjectModel = Model;
 	m_objectTexture = texture;
+
+	//need to clean this up
+	TranslateX(Position.x);
+	TranslateY(Position.y);
+	TranslateZ(Position.z);
+
+	//Shouldn't be done here - either a rendering engine or create shaders in gamestates and pass in to
+	//render function of game objects
+	m_basicShader.LoadShader(L"Assets\\Shaders\\basicShader.vs", L"Assets\\Shaders\\basicShader.ps");
 }
 
 GameObject::~GameObject()
@@ -75,26 +85,30 @@ void GameObject::TranslateY(float distance)
 	UpdateWorldMatrix();
 }
 
+void GameObject::TranslateZ(float distance)
+{
+	XMMATRIX translation = XMMatrixTranslation(0, 0, distance);
+	_Position = XMVector3Transform(_Position, translation);
+	UpdateWorldMatrix();
+}
+
 void GameObject::UpdateWorldMatrix()
 {
 	XMMATRIX translation = XMMatrixTranslation(XMVectorGetX(_Position), XMVectorGetY(_Position), XMVectorGetZ(_Position));
 
 	_WorldMatrix = _RotationY*translation;
 
-	_WorldMatrix = XMMatrixTranspose(_WorldMatrix);
+	//_WorldMatrix = XMMatrixTranspose(_WorldMatrix); NOW DONE IN SHADER
 }
 
 
-void GameObject::Update(ID3D11DeviceContext* deviceContext)
+void GameObject::Update()
 {
-	deviceContext->UpdateSubresource(m_worldBuffer, 0, 0, &GetWorldMatrix(), 0, 0);
-	deviceContext->VSSetConstantBuffers(0, 1, &m_worldBuffer);
+
 }
 
-void GameObject::Render(ID3D11DeviceContext* deviceContext) {
+void GameObject::Render(Camera* camera) {
 	
-	deviceContext->PSSetShaderResources(0, 1, m_objectTexture->GetTexture());
-	deviceContext->PSSetSamplers(0, 1, m_objectTexture->GetSampler());
-
-	_ObjectModel->Render(deviceContext);
+	m_basicShader.Bind(_WorldMatrix, camera, m_objectTexture);
+		_ObjectModel->Render();
 }

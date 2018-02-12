@@ -1,0 +1,57 @@
+/*******************************************************************************************************************
+	Global data coming in from the CPU
+*******************************************************************************************************************/
+SamplerState 	SampleType;
+
+/*******************************************************************************************************************
+	Constant buffer data coming in from the CPU
+*******************************************************************************************************************/
+cbuffer LightBuffer
+{
+    float4 ambientColor;
+    float4 diffuseColor;
+    float3 lightDirection;
+    float padding;
+};
+
+
+/*******************************************************************************************************************
+	Data coming in from the vertex shader
+*******************************************************************************************************************/
+struct PixelOutput
+{
+    float4 position 	: SV_POSITION;
+	float3 normal		: NORMAL;
+};
+
+
+/*******************************************************************************************************************
+	Main Function
+*******************************************************************************************************************/
+float4 PixelMain(PixelOutput pixelOutput) : SV_TARGET
+{
+      float3 lightDir;
+    float lightIntensity;
+    float4 color;
+
+
+    // Set the default output color to the ambient light value for all pixels.
+    color = ambientColor;
+
+    // Invert the light direction for calculations.
+    lightDir = -lightDirection;
+
+    // Calculate the amount of light on this pixel.
+    lightIntensity = saturate(dot(pixelOutput.normal, lightDir));
+
+    if(lightIntensity > 0.0f)
+    {
+        // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
+        color += (diffuseColor * lightIntensity);
+    }
+
+    // Saturate the final light color.
+    color = saturate(color);
+
+    return color;
+}

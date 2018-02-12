@@ -1,47 +1,64 @@
 #include "Texture.h"
-#include "D3DX11tex.h"
-#include "Memory.h"
+#include <d3dx11tex.h>
+#include "GraphicsManager.h"
+#include "Log.h"
 
-Texture::Texture()
+Texture::Texture()	:	m_texture(nullptr),
+						m_textureSampler(nullptr)
 {
+
 }
+
 
 Texture::~Texture()
 {
+	if (m_textureSampler)	m_textureSampler->Release(); m_textureSampler = nullptr;
+	if (m_texture)			m_texture->Release(); m_texture = nullptr;
 }
 
-bool Texture::LoadTexture(const char* fileLocation, ID3D11Device* device)
+
+bool Texture::LoadTexture(const char* fileLocation)
 {
 	HRESULT result = S_OK;
 
-	result = D3DX11CreateShaderResourceViewFromFile(device, fileLocation, 0, 0, &m_colorMap, 0);
-	if (FAILED(result))
-	{
-		//DXTRACE_MSG("Failed to load the texture image!");
-		return false;
-	}
+	result = D3DX11CreateShaderResourceViewFromFile(Graphics::Instance()->GetDevice(), fileLocation, 0, 0, &m_texture, 0);
+	if (FAILED(result)) { DX_LOG("[TEXTURE] Failed to create texture: ", fileLocation, LOG_ERROR); return false; }
+
+	D3D11_SAMPLER_DESC colorMapDescription = {};
 	
-	D3D11_SAMPLER_DESC colorMapDesc;
-	ZeroMemory(&colorMapDesc, sizeof(colorMapDesc));
-	colorMapDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	colorMapDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	colorMapDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	colorMapDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	colorMapDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	/*colorMapDescription.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	colorMapDescription.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	//colorMapDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	colorMapDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	colorMapDescription.MaxLOD = D3D11_FLOAT32_MAX;
 
-	result = device->CreateSamplerState(&colorMapDesc, &m_colorMapSampler);
+	result = Graphics::Instance()->GetDevice()->CreateSamplerState(&colorMapDescription, &m_textureSampler);
 
-	if (FAILED(result)){
-		//DXTRACE_MSG("Failed to create color map sampler state!");
+	*/
+	
+		// Create a texture sampler state description.
+	colorMapDescription.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	colorMapDescription.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	colorMapDescription.MipLODBias = 0.0f;
+	colorMapDescription.MaxAnisotropy = 1;
+	colorMapDescription.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	colorMapDescription.BorderColor[0] = 0;
+	colorMapDescription.BorderColor[1] = 0;
+	colorMapDescription.BorderColor[2] = 0;
+	colorMapDescription.BorderColor[3] = 0;
+	colorMapDescription.MinLOD = 0;
+	colorMapDescription.MaxLOD = D3D11_FLOAT32_MAX;
+	result = Graphics::Instance()->GetDevice()->CreateSamplerState(&colorMapDescription, &m_textureSampler);
+
+
+	if (FAILED(result)) {
+		DX_LOG("[TEXTURE] Failed to create colour map sampler state", DX_LOG_EMPTY, LOG_ERROR);
 		return false;
 	}
-	return true;
-}
 
-void Texture::UnloadTexture()
-{
-	if (m_colorMapSampler) SafeRelease(m_colorMapSampler);
-	if (m_colorMap) SafeRelease(m_colorMap);
+	return true;
 }

@@ -2,8 +2,8 @@
 
 
 
-AnimatedGameObject::AnimatedGameObject(XMVECTOR Position, Texture* texture) :
-	GameObject(Position, nullptr, texture)
+AnimatedGameObject::AnimatedGameObject(XMVECTOR Position, Texture* texture) 
+	//GameObject(Position, nullptr, texture)
 {
 	
 	_CurrentAnim = "walk";

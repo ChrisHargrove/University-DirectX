@@ -1,5 +1,4 @@
-#ifndef TEXTURE_H_
-#define TEXTURE_H_
+#pragma once
 
 #include <d3d11.h>
 
@@ -9,15 +8,14 @@ public:
 	Texture();
 	~Texture();
 
-	ID3D11ShaderResourceView* const* GetTexture() { return &m_colorMap; }
-	ID3D11SamplerState* const* GetSampler() { return &m_colorMapSampler; }
-	bool LoadTexture(const char* fileLocation, ID3D11Device* device);
-	void UnloadTexture();
-protected:
+public:
+	ID3D11ShaderResourceView* const* GetTexture()	{ return &m_texture; }
+	ID3D11SamplerState* const* GetSampler()			{ return &m_textureSampler; }
+
+public:
+	bool LoadTexture(const char* fileLocation);
 
 private:
-	ID3D11ShaderResourceView* m_colorMap;
-	ID3D11SamplerState* m_colorMapSampler;
+	ID3D11ShaderResourceView*	m_texture;
+	ID3D11SamplerState*			m_textureSampler;
 };
-
-#endif

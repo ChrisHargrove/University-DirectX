@@ -131,3 +131,17 @@ std::string AddString(const std::string& a, const std::string& b)
 void ReplaceCharacter(std::string& str, const char current, const char replaceWith) {
 	std::replace(str.begin(), str.end(), current, replaceWith);
 }
+
+
+XMFLOAT3 VectorToFloat(const XMVECTOR& vectorToConvert)
+{
+	XMFLOAT3 floatConversion;
+	XMStoreFloat3(&floatConversion, vectorToConvert);
+
+	return floatConversion;
+}
+
+XMVECTOR FloatToVector(const XMFLOAT3& floatToConvert)
+{	
+	return XMLoadFloat3(&floatToConvert);
+}

@@ -1,8 +1,7 @@
-#ifndef OBJ_LOADER_H_
-#define OBJ_LOADER_H_
+#pragma once
 
 /*******************************************************************************************************************
-	OBJLoader.h, OBJLoader.cpp
+	ObjLoader.h, ObjLoader.cpp
 	Created by Kim Kane
 	Last updated: 09/01/2018
 
@@ -15,15 +14,7 @@
 #include <string>
 #include <d3d11.h>
 #include <xnamath.h>
-
-struct PackedVertex {
-	XMFLOAT3 position;
-	XMFLOAT2 textureCoord;
-	XMFLOAT3 normal;
-	bool operator<(const PackedVertex that) const {
-		return memcmp((void*)this, (void*)&that, sizeof(PackedVertex))>0;
-	};
-};
+#include "Constants.h"
 
 class ObjLoader {
 
@@ -36,7 +27,7 @@ public:
 
 private:
 	void PushData(std::vector<XMFLOAT3>& outVertices, std::vector<XMFLOAT2>& outTextureCoords, std::vector<XMFLOAT3>& outNormals, std::vector<unsigned int>& outIndices);
-	bool GetSimilarVertexIndex(PackedVertex& packed, std::map<PackedVertex, unsigned int>& vertexToOutIndex, unsigned int& result);
+	bool GetSimilarVertexIndex(BufferConstants::PackedVertex& packed, std::map<BufferConstants::PackedVertex, unsigned int>& vertexToOutIndex, unsigned int& result);
 	
 	void GetVertices(std::vector<XMFLOAT3>& inVertices);
 	void GetTextureCoords(std::vector<XMFLOAT2>& inTextureCoords);
@@ -63,5 +54,3 @@ template <typename T> void ObjLoader::CalibrateIndices(std::vector<T>& inData, s
 		finalData.push_back(inData[finalIndices[i] - 1]);
 	}
 }
-
-#endif
