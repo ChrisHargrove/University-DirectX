@@ -11,12 +11,19 @@
 #include "GameState.h"
 
 #include "Terrain.h"
+<<<<<<< HEAD
 
 #include "GameObject.h"
 #include "Model.h"
 #include "Texture.h"
 
 #include "Actor.h"
+=======
+>>>>>>> master
+
+#include "GameObject.h"
+#include "Model.h"
+#include "Texture.h"
 
 class MenuState : public GameState {
 
@@ -41,6 +48,11 @@ private:
 	Texture m_laraTexture;
 	Texture m_cubeTexture;
 
+<<<<<<< HEAD
 	Actor* m_laraObject;
 	//GameObject* m_cubeObject;
+=======
+	GameObject* m_laraObject;
+	GameObject* m_cubeObject;
+>>>>>>> master
 };

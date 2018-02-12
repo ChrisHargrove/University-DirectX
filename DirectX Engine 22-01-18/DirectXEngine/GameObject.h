@@ -20,6 +20,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "BasicShader.h"
+<<<<<<< HEAD
 #include "AlignedAllocationPolicy.h"
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,12 +28,17 @@
 //  the most fundamental data for all game objects. eg.Position, Direction, WorldMatrix etc.
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class GameObject : public AlignedAllocationPolicy<Byte16>
+=======
+
+class GameObject : public AlignedAllocationPolicy<BYTE_16>
+>>>>>>> master
 {
 public:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Default Constructor
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	GameObject();
+<<<<<<< HEAD
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Constructor
@@ -45,6 +51,9 @@ public:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Default Destructor
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=======
+	GameObject(XMFLOAT3 Position, Model* Model, Texture* texture);
+>>>>>>> master
 	~GameObject();
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,11 +81,18 @@ public:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	Texture* GetTexture() const;
 
+<<<<<<< HEAD
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Rotates the game object about its X axis by the number of degrees supplied.
     //  --Angle-- The angle to rotate the game object by.
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     void RotateX(float Angle);
+=======
+	void RotateY(float angle);
+	void TranslateX(float distance);
+	void TranslateY(float distance);
+	void TranslateZ(float distance);
+>>>>>>> master
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Rotates the game object about its Y axis by the number of degrees supplied.
@@ -96,6 +112,7 @@ public:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	void TranslateX(float Distance);
 
+<<<<<<< HEAD
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Translates the game object about its Y axis by the distance supplied.
     //  --Distance-- The distance to translate by
@@ -131,6 +148,13 @@ protected:
     //  --Model-- A pointer to a 3D model.
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     void SetModel(Model* Model);
+=======
+	void Update();
+	void Render(Camera* camera);
+
+protected:
+	Model*			_ObjectModel;
+>>>>>>> master
 
 private:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -143,6 +167,7 @@ private:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     void CalculateRotationMatrix();
 
+<<<<<<< HEAD
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Member Variables.
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,6 +181,13 @@ private:
 	XMVECTOR _Direction;        // Game Object Direction Vector
 	XMMATRIX _RotationMatrix;   // Game Object Y Axis Rotational Matrix
 	XMMATRIX _WorldMatrix;      // Game Object World Matrix
+=======
+	Texture*		m_objectTexture;
+	ID3D11Buffer*	m_worldBuffer;
+
+	BasicShader		m_basicShader;
+};
+>>>>>>> master
 
 	Model*			_ObjectModel;   // Game Object 3D Model Pointer
 	Texture*		_ObjectTexture; // Game Object Model Texture Pointer

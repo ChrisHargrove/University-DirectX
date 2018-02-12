@@ -3,13 +3,14 @@
 /*******************************************************************************************************************
 	Buffer.h, Buffer.cpp
 	Created by Kim Kane
-	Last updated: 04/01/2018
+	Last updated: 09/02/2018
 
 	Creates a DirectX buffer object, which we can use to send data to the graphics card.
 
 *******************************************************************************************************************/
 #include <d3d11.h>
 #include <vector>
+<<<<<<< HEAD
 #include "objLoader.h"
 
 struct TerrainVertexType
@@ -17,6 +18,9 @@ struct TerrainVertexType
 	XMFLOAT3 position;
 	XMFLOAT4 color;
 };
+=======
+#include "Constants.h"
+>>>>>>> master
 
 class Buffer {
 
@@ -36,6 +40,7 @@ public:
 	void SetTerrainIndexCount(unsigned int indexCount);
 
 public:
+<<<<<<< HEAD
 	bool Push(const std::vector<PackedVertex>& vertices);
 	bool Push(const std::vector<unsigned int>& indices);
 
@@ -46,6 +51,22 @@ public:
 	static bool LockConstantBuffer(ID3D11Buffer* constantBuffer, D3D11_MAPPED_SUBRESOURCE& mappedResource);
 	static void UnlockConstantBuffer(ID3D11Buffer* constantBuffer);
 	static void SetConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer);
+=======
+	bool Push(const std::vector<BufferConstants::PackedVertex>& vertices);
+	bool Push(const std::vector<unsigned int>& indices);
+
+	bool Push(const std::vector<BufferConstants::PackedTerrainVertex>& vertices);
+	bool Push(const std::vector<unsigned long>& indices);
+
+public:
+	void Render(unsigned int stride, unsigned int offset) const;
+
+public:
+	static bool LockConstantBuffer(ID3D11Buffer* constantBuffer, D3D11_MAPPED_SUBRESOURCE& mappedResource);
+	static void UnlockConstantBuffer(ID3D11Buffer* constantBuffer);
+	static void SetVertexConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer);
+	static void SetPixelConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer);
+>>>>>>> master
 	static bool CreateConstantBuffer(ID3D11Buffer** constantBuffer, UINT bufferByteSize);
 
 private:

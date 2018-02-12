@@ -25,10 +25,10 @@
 	Effectively, the first thread to reach the lock will create the instance. The other thread will 'wait'
 	for the lock to be unlocked, and then as the instance has already been created, will just return that instance.
 
-	I am also using an auto_ptr* to eliminate memory leaks, as we create the singleton object on the heap.
+	I am also using an unique_ptr* to eliminate memory leaks, as we create the singleton object on the heap.
 
-	*std::auto_ptr is responsible for managing dynamically allocated memory and automatically 
-	 calls delete to free the dynamic memory when the auto_ptr is destroyed or goes out of scope.
+	*std::unique_ptr is responsible for managing dynamically allocated memory and automatically 
+	 calls delete to free the dynamic memory when the unique_ptr is destroyed or goes out of scope.
 
 *******************************************************************************************************************/
 #define WIN32_LEAN_AND_MEAN
@@ -72,7 +72,7 @@ template <class T> CriticalSection Singleton<T>::s_singletonLock;
 template <class T> T* Singleton<T>::Instance()
 {
 	EnterCriticalSection(&s_singletonLock);
-		static std::auto_ptr<T> s_singletonObject(new T());
+		static std::unique_ptr<T> s_singletonObject(new T());
 	LeaveCriticalSection(&s_singletonLock);
 
 	return s_singletonObject.get();

@@ -1,7 +1,7 @@
 #pragma once
 
-const size_t Byte8	= 8;
-const size_t Byte16 = 16;
+const size_t BYTE_8		= 8;
+const size_t BYTE_16	= 16;
 
 template<size_t Alignment> class AlignedAllocationPolicy
 {

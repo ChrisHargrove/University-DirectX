@@ -1,10 +1,25 @@
 /*******************************************************************************************************************
+<<<<<<< HEAD
+=======
+	Global data coming in from the CPU
+*******************************************************************************************************************/
+Texture2D 		shaderTexture;
+SamplerState 	SampleType;
+
+
+/*******************************************************************************************************************
+>>>>>>> master
 	Data coming in from the vertex shader
 *******************************************************************************************************************/
 struct PixelOutput
 {
+<<<<<<< HEAD
     float4 position : SV_POSITION;
     float4 color	: COLOR;
+=======
+    float4 position 	: SV_POSITION;
+	float2 textureCoord	: TEXCOORD0;
+>>>>>>> master
 };
 
 
@@ -13,6 +28,13 @@ struct PixelOutput
 *******************************************************************************************************************/
 float4 PixelMain(PixelOutput pixelOutput) : SV_TARGET
 {
+<<<<<<< HEAD
 	//-------------------------------------------- Send the data to the screen
     return pixelOutput.color;
+=======
+	float4 textureColor = shaderTexture.Sample(SampleType, pixelOutput.textureCoord);
+
+	//-------------------------------------------- Send the data to the screen
+    return textureColor;
+>>>>>>> master
 }

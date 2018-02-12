@@ -9,18 +9,33 @@ GameObject::GameObject()
 {
 }
 
+<<<<<<< HEAD
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GameObject::GameObject(const XMFLOAT3& Position, Model* Model, Texture* texture)
 {
     _Position = XMLoadFloat3(&Position);
+=======
+GameObject::GameObject(XMFLOAT3 Position, Model* Model, Texture* texture)
+{
+	//_Position = Position;
+>>>>>>> master
 	_Direction = DEFAULT_FORWARD;
 	_RotationMatrix = XMMatrixIdentity();
 	_WorldMatrix = XMMatrixIdentity();
 	_ObjectModel = Model;
+<<<<<<< HEAD
 	_ObjectTexture = texture;
     _Rotation = XMVectorSet(0,0,0,0);
     
     UpdateWorldMatrix();
+=======
+	m_objectTexture = texture;
+
+	//need to clean this up
+	TranslateX(Position.x);
+	TranslateY(Position.y);
+	TranslateZ(Position.z);
+>>>>>>> master
 
 	//Shouldn't be done here - either a rendering engine or create shaders in gamestates and pass in to
 	//render function of game objects
@@ -102,8 +117,19 @@ void GameObject::TranslateY(float distance)
 	UpdateWorldMatrix();
 }
 
+<<<<<<< HEAD
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GameObject::TranslateZ(float distance)
+=======
+void GameObject::TranslateZ(float distance)
+{
+	XMMATRIX translation = XMMatrixTranslation(0, 0, distance);
+	_Position = XMVector3Transform(_Position, translation);
+	UpdateWorldMatrix();
+}
+
+void GameObject::UpdateWorldMatrix()
+>>>>>>> master
 {
 	XMMATRIX translation = XMMatrixTranslation(0, 0, distance);
 	_Position = XMVector3Transform(_Position, translation);
@@ -117,11 +143,15 @@ void GameObject::Translate(const XMVECTOR & translation)
     UpdateWorldMatrix();
 }
 
+<<<<<<< HEAD
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GameObject::UpdateWorldMatrix()
 {
 	XMMATRIX translation = XMMatrixTranslation(XMVectorGetX(_Position), XMVectorGetY(_Position), XMVectorGetZ(_Position));
 	_WorldMatrix = _RotationMatrix*translation;
+=======
+	//_WorldMatrix = XMMatrixTranspose(_WorldMatrix); NOW DONE IN SHADER
+>>>>>>> master
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,6 +161,7 @@ void GameObject::CalculateRotationMatrix()
     _Direction = XMVector3Transform(_Direction, _RotationMatrix);
 }
 
+<<<<<<< HEAD
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GameObject::Update()
 {
@@ -155,3 +186,15 @@ void GameObject::SetModel(Model * Model)
 {
     _ObjectModel = Model;
 }
+=======
+void GameObject::Update()
+{
+
+}
+
+void GameObject::Render(Camera* camera) {
+	
+	m_basicShader.Bind(_WorldMatrix, camera, m_objectTexture);
+		_ObjectModel->Render();
+}
+>>>>>>> master

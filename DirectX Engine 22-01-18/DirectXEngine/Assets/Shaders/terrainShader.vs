@@ -14,13 +14,8 @@ cbuffer MatrixBuffer
 *******************************************************************************************************************/
 struct VertexInput
 {
-<<<<<<< HEAD
-    float4 position : POSITION;
-    float4 color : COLOR;
-=======
     float4 position 		: POSITION;
-	float2 textureCoord 	: TEXCOORD0;
->>>>>>> master
+	float3 normal 			: NORMAL;
 };
 
 
@@ -29,13 +24,8 @@ struct VertexInput
 *******************************************************************************************************************/
 struct PixelOutput
 {
-<<<<<<< HEAD
-    float4 position : SV_POSITION;
-    float4 color	: COLOR;
-=======
     float4 position 		: SV_POSITION;
-	float2 textureCoord 	: TEXCOORD0;
->>>>>>> master
+	float3 normal 			: NORMAL;
 };
 
 
@@ -54,15 +44,15 @@ PixelOutput VertexMain(VertexInput vertexInput)
     pixelOutput.position = mul(pixelOutput.position, viewMatrix);
     pixelOutput.position = mul(pixelOutput.position, projectionMatrix);
     
-<<<<<<< HEAD
-	//--------------------------------------------  Store the input color for the pixel shader to use
-    pixelOutput.color = vertexInput.color;
-    
-=======
 	//--------------------------------------------  Store the input texture for the pixel shader to use
-    pixelOutput.textureCoord = vertexInput.textureCoord;
+    //pixelOutput.textureCoord = vertexInput.textureCoord;
+	   
+	// Calculate the normal vector against the world matrix only.
+    pixelOutput.normal = mul(vertexInput.normal, (float3x3)worldMatrix);
 	
->>>>>>> master
+    // Normalize the normal vector.
+    pixelOutput.normal = normalize(pixelOutput.normal);
+	
 	//-------------------------------------------- Send the data to the pixel shader
     return pixelOutput;
 }
