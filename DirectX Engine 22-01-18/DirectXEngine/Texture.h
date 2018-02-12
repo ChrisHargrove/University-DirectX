@@ -9,13 +9,13 @@ public:
 	~Texture();
 
 public:
-	ID3D11ShaderResourceView* const* GetTexture()	{ return &m_colorMap; }
-	ID3D11SamplerState* const* GetSampler()			{ return &m_colorMapSampler; }
+	ID3D11ShaderResourceView* const* GetTexture()	{ return &m_texture; }
+	ID3D11SamplerState* const* GetSampler()			{ return &m_textureSampler; }
 
 public:
 	bool LoadTexture(const char* fileLocation);
 
 private:
-	ID3D11ShaderResourceView*	m_colorMap;
-	ID3D11SamplerState*			m_colorMapSampler;
+	ID3D11ShaderResourceView*	m_texture;
+	ID3D11SamplerState*			m_textureSampler;
 };

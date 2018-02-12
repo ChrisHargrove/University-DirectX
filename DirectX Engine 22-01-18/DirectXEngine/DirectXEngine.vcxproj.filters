@@ -161,6 +161,9 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\Game\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainShader.cpp">
+      <Filter>Source Files\Engine\Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -238,6 +241,9 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\Game\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainShader.h">
+      <Filter>Header Files\Engine\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\basicShader.ps">
@@ -250,6 +256,12 @@
       <Filter>Source Files\Engine\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\fontShader.vs">
+      <Filter>Source Files\Engine\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\terrainShader.ps">
+      <Filter>Source Files\Engine\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\terrainShader.vs">
       <Filter>Source Files\Engine\Shaders</Filter>
     </None>
   </ItemGroup>

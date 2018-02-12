@@ -27,7 +27,7 @@ public:
 public:
 	bool Initialize(HINSTANCE instance, LPCSTR title, bool fullScreen, bool vSync);
 	void Shutdown();
-	bool Run();
+	int Run();
 
 public:
 	void TemporaryState(GameState* state);

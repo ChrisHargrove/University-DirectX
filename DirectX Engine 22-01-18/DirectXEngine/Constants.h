@@ -10,6 +10,8 @@
 
 *******************************************************************************************************************/
 #include <string>
+#include <d3d11.h>
+#include <xnamath.h>
 
 namespace FileConstants {
 
@@ -31,7 +33,7 @@ namespace FileConstants {
 		NORMALS_TITLE_OFFSET		= 3,
 		FACES_TITLE_OFFSET			= 2,
 		RGB_OFFSET					= 3,
-		HEIGHTMAP_VERTICES			= 12
+		HEIGHTMAP_VERTICES			= 6
 	};
 }
 
@@ -76,4 +78,23 @@ namespace GraphicConstants {
 namespace MathsConstants {
 	
 	const float Radians = 0.0174532925f;
+}
+
+
+namespace BufferConstants {
+
+	struct PackedTerrainVertex
+	{
+		XMFLOAT3 position;
+		XMFLOAT3 normal;
+	};
+
+	struct PackedVertex {
+		XMFLOAT3 position;
+		XMFLOAT2 textureCoord;
+		XMFLOAT3 normal;
+		bool operator<(const PackedVertex that) const {
+			return memcmp((void*)this, (void*)&that, sizeof(PackedVertex))>0;
+		};
+	};
 }

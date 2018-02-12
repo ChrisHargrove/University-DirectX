@@ -6,11 +6,11 @@
 #include "Log.h"
 
 /*******************************************************************************************************************
-	Struct that defines the index positions
+	Struct that defines the vertex locations on the screen, in reference to the terrain
 *******************************************************************************************************************/
-struct IndexType
-{
-	int bottomLeft, bottomRight, topLeft, topRight;
+struct VertexLocation {
+
+	unsigned int bottomLeft, bottomRight, topLeft, topRight;
 
 	void SetCoordinates(int terrainHeight, unsigned int y, unsigned int x)
 	{
@@ -27,9 +27,10 @@ struct IndexType
 *******************************************************************************************************************/
 Terrain::Terrain()	:	m_terrainWidth(0),
 						m_terrainHeight(0),
-						m_stride(sizeof(TerrainVertexType)),
+						m_terrainLevel(15.0f),
+						m_stride(sizeof(BufferConstants::PackedTerrainVertex)),
 						m_offset(0),
-						m_localTransform(XMMatrixIdentity())
+						m_transform(XMMatrixIdentity())
 {
 	DX_LOG("[TERRAIN] Terrain constructor initialized", DX_LOG_EMPTY, LOG_MESSAGE);
 }
@@ -50,13 +51,16 @@ Terrain::~Terrain()
 bool Terrain::Initialize(const char* fileLocation)
 {
 	//---------------------------------------------------------------- Load in the shaders used for the terrain
-	if (!m_basicShader.LoadShader(L"Assets\\Shaders\\basicShader.vs", L"Assets\\Shaders\\basicShader.ps")) { return false; }
+	if (!m_terrainShader.LoadShader(L"Assets\\Shaders\\terrainShader.vs", L"Assets\\Shaders\\terrainShader.ps")) { return false; }
 
 	//---------------------------------------------------------------- Load in the heightmap for the terrain
 	if (!LoadHeightMap(fileLocation)) { return false; }
 
-	//---------------------------------------------------------------- Normalize the heightmap
-	NormalizeHeightMap();
+	//---------------------------------------------------------------- Level out the heightmap so that the height of the terrain is not too high
+	LevelHeightMap();
+
+	//---------------------------------------------------------------- Calculate normals for terrain lighting
+	CalculateNormals();
 
 	//---------------------------------------------------------------- Initialize the vertex and index buffer that hold the geometry for the terrain
 	if (!InitializeBuffers()) { return false; }
@@ -96,7 +100,7 @@ bool Terrain::LoadHeightMap(const char* fileLocation)
 	}
 
 	//---------------------------------------------------------------- Save the dimensions of the BMP file width and height in to our user-defined variables
-	m_terrainWidth = bitmapInfoHeader.biWidth;
+	m_terrainWidth	= bitmapInfoHeader.biWidth;
 	m_terrainHeight = bitmapInfoHeader.biHeight;
 
 	//---------------------------------------------------------------- Calculate the size of the BMP image data - width x height x 3 RGB values for each pixel in the BMP
@@ -129,10 +133,8 @@ bool Terrain::LoadHeightMap(const char* fileLocation)
 	int index = 0;
 
 	//---------------------------------------------------------------- Loop through the heightmap pixels
-	for (unsigned int z = 0; z < m_terrainHeight; z++)
-	{
-		for (unsigned int x = 0; x <m_terrainWidth; x++)
-		{
+	for (int z = 0; z < m_terrainHeight; z++) {
+		for (int x = 0; x <m_terrainWidth; x++) {
 			//---------------------------------------------------------------- Set the height variable to the RGB pixel value read in from the BMP file
 			height = bitmapImage[rgb];
 
@@ -154,22 +156,148 @@ bool Terrain::LoadHeightMap(const char* fileLocation)
 
 
 /*******************************************************************************************************************
-	Function that normalizes a heightmap
+	Function that levels out a heightmap (flattens/expands the height of terrain)
 *******************************************************************************************************************/
-void Terrain::NormalizeHeightMap()
+void Terrain::LevelHeightMap()
 {
-	int i, j;
+	for (int x = 0; x < m_terrainHeight; x++) {
+		for (int z = 0; z < m_terrainWidth; z++) {
+			m_heightMap[(m_terrainHeight * x) + z].y /= m_terrainLevel;
+		}
+	}
+}
 
 
-	for (j = 0; j<m_terrainHeight; j++)
-	{
-		for (i = 0; i<m_terrainWidth; i++)
-		{
-			m_heightMap[(m_terrainHeight * j) + i].y /= 15.0f;
+/*******************************************************************************************************************
+	Function that calculates the normals of the terrain for lighting effects
+*******************************************************************************************************************/
+void Terrain::CalculateNormals()
+{
+	VertexLocation vertex = { 0 };
+
+	XMFLOAT3 bottomLeft, bottomRight, topLeft;
+	XMFLOAT3 firstVector, secondVector;
+
+	int index = 0;
+
+	//---------------------------------------------------------------- We do -1 to make the width and height of terrain an odd number, necessary for accurate calculation of normal data
+	int offsetTerrainHeight = m_terrainHeight - 1;
+	int offsetTerrainWidth	= m_terrainWidth - 1;
+
+	std::vector<XMFLOAT3> normals((offsetTerrainWidth) * (offsetTerrainHeight));
+
+	//---------------------------------------------------------------- Go through all the faces in the mesh and calculate their normals
+	for (int y = 0; y < (offsetTerrainHeight); y++) {
+		for (int x = 0; x < (offsetTerrainWidth); x++) {
+
+			vertex.SetCoordinates(m_terrainHeight, y, x);
+
+			//---------------------------------------------------------------- Get three vertices from the face.
+			bottomLeft.x = m_heightMap[vertex.bottomLeft].x;
+			bottomLeft.y = m_heightMap[vertex.bottomLeft].y;
+			bottomLeft.z = m_heightMap[vertex.bottomLeft].z;
+			
+			bottomRight.x = m_heightMap[vertex.bottomRight].x;
+			bottomRight.y = m_heightMap[vertex.bottomRight].y;
+			bottomRight.z = m_heightMap[vertex.bottomRight].z;
+
+			topLeft.x = m_heightMap[vertex.topLeft].x;
+			topLeft.y = m_heightMap[vertex.topLeft].y;
+			topLeft.z = m_heightMap[vertex.topLeft].z;
+
+			//---------------------------------------------------------------- Calculate the two vectors for this face
+			firstVector.x = bottomLeft.x - topLeft.x;
+			firstVector.y = bottomLeft.y - topLeft.y;
+			firstVector.z = bottomLeft.z - topLeft.z;
+
+			secondVector.x = topLeft.x - bottomRight.x;
+			secondVector.y = topLeft.y - bottomRight.y;
+			secondVector.z = topLeft.z - bottomRight.z;
+
+			index = (y * (offsetTerrainHeight)) + x;
+
+			//---------------------------------------------------------------- Calculate the cross product of those two vectors to get the un-normalized value for this face normal
+			normals[index].x = (firstVector.y * secondVector.z) - (firstVector.z * secondVector.y);
+			normals[index].y = (firstVector.z * secondVector.x) - (firstVector.x * secondVector.z);
+			normals[index].z = (firstVector.x * secondVector.y) - (firstVector.y * secondVector.x);
 		}
 	}
 
-	return;
+	XMFLOAT3 normal;
+	int	count = 0;
+	float length = 0.0f;
+
+	//---------------------------------------------------------------- Now go through all the vertices and take an average of each face normal that the vertex touches to get the averaged normal for that vertex
+	for (int y = 0; y < m_terrainHeight; y++) {
+		for (int x = 0; x < m_terrainWidth; x++) {
+		
+			normal.x = 0.0f;
+			normal.y = 0.0f;
+			normal.z = 0.0f;
+			
+			count = 0;
+
+			//---------------------------------------------------------------- Bottom left face
+			if (((x - 1) >= 0) && ((y - 1) >= 0)) {
+				
+				index = ((y - 1) * (offsetTerrainHeight)) + (x - 1);
+
+				normal.x += normals[index].x;
+				normal.y += normals[index].y;
+				normal.z += normals[index].z;
+				count++;
+			}
+
+			//---------------------------------------------------------------- Bottom right face.
+			if ((x < (m_terrainWidth - 1)) && ((y - 1) >= 0)) {
+				
+				index = ((y - 1) * (offsetTerrainHeight)) + x;
+
+				normal.x += normals[index].x;
+				normal.y += normals[index].y;
+				normal.z += normals[index].z;
+				count++;
+			}
+
+			//---------------------------------------------------------------- Top left face
+			if (((x - 1) >= 0) && (y < (offsetTerrainHeight))) {
+				
+				index = (y * (offsetTerrainHeight)) + (x - 1);
+
+				normal.x += normals[index].x;
+				normal.y += normals[index].y;
+				normal.z += normals[index].z;
+				count++;
+			}
+
+			//---------------------------------------------------------------- Top right face
+			if ((x < (offsetTerrainWidth)) && (y < (offsetTerrainHeight))) {
+				
+				index = (y * (offsetTerrainHeight)) + x;
+
+				normal.x += normals[index].x;
+				normal.y += normals[index].y;
+				normal.z += normals[index].z;
+				count++;
+			}
+
+			//---------------------------------------------------------------- Take the average of the faces touching this vertex
+			normal.x = (normal.x / (float)count);
+			normal.y = (normal.y / (float)count);
+			normal.z = (normal.z / (float)count);
+
+			//---------------------------------------------------------------- Calculate the length of this normal
+			length = sqrt((normal.x * normal.x) + (normal.y * normal.y) + (normal.z * normal.z));
+
+			//---------------------------------------------------------------- Get an index to the vertex location in the height map array
+			index = (y * m_terrainHeight) + x;
+
+			//---------------------------------------------------------------- Normalize the final shared normal for this vertex and store it in the height map array
+			m_heightMap[index].normal.x = (normal.x / length);
+			m_heightMap[index].normal.y = (normal.y / length);
+			m_heightMap[index].normal.z = (normal.z / length);
+		}
+	}
 }
 
 
@@ -178,15 +306,15 @@ void Terrain::NormalizeHeightMap()
 *******************************************************************************************************************/
 void Terrain::SetVertexPosition(int position)
 {
-	static int index = 0;
+	static unsigned int index	= 0;
+
+	m_vertices[index].position	= XMFLOAT3(m_heightMap[position].x, m_heightMap[position].y, m_heightMap[position].z);
+	m_vertices[index].normal	= XMFLOAT3(m_heightMap[position].normal.x, m_heightMap[position].normal.y, m_heightMap[position].normal.z);
+	m_indices[index]			= index;
+	index++;
 
 	//---------------------------------------------------------------- Resets the index every time we start a new game state
 	if (index >= m_vertices.size()) { index = 0; }
-
-	m_vertices[index].position	= XMFLOAT3(m_heightMap[position].x, m_heightMap[position].y, m_heightMap[position].z);
-	m_vertices[index].color		= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_indices[index]			= index;
-	index++;
 }
 
 
@@ -195,8 +323,12 @@ void Terrain::SetVertexPosition(int position)
 *******************************************************************************************************************/
 bool Terrain::InitializeBuffers()
 {
+	//---------------------------------------------------------------- We do -1 to make the width and height of terrain an odd number, necessary for accurate placement of vertex data
+	int offsetTerrainHeight = m_terrainHeight - 1;
+	int offsetTerrainWidth	= m_terrainWidth - 1;
+
 	//---------------------------------------------------------------- Calculate number of vertices in terrain mesh (12 points/vertices to make 1 face - 2 x triangles, 6 points per triangle
-	unsigned int vertexCount = (m_terrainWidth - 1) * (m_terrainHeight - 1) * FileConstants::HEIGHTMAP_VERTICES;
+	unsigned int vertexCount = (offsetTerrainWidth) * (offsetTerrainHeight) * FileConstants::HEIGHTMAP_VERTICES;
 
 	//---------------------------------------------------------------- Set the vertex count of the buffer object
 	m_buffer.SetTerrainVertexCount(vertexCount);
@@ -209,31 +341,21 @@ bool Terrain::InitializeBuffers()
 	m_vertices.resize(vertexCount);
 	m_indices.resize(indexCount);
 
-	IndexType index = { 0 };
+	VertexLocation vertex = { 0 };
 
 	//---------------------------------------------------------------- Loop through the terrain and place vertices in relevant positions, adding the data to the vertex and index vectors
-	for (unsigned int y = 0; y < (m_terrainHeight - 1); y++)
-	{
-		for (unsigned int x = 0; x < (m_terrainWidth - 1); x++)
-		{
+	for (int y = 0; y < (offsetTerrainHeight); y++) {
+		for (int x = 0; x < (offsetTerrainWidth); x++) {
 			//---------------------------------------------------------------- Calculate the index coordinates
-			index.SetCoordinates(m_terrainHeight, y, x);
+			vertex.SetCoordinates(m_terrainHeight, y, x);
 
-			//---------------------------------------------------------------- First triangle vertex positions
-			SetVertexPosition(index.topLeft);
-			SetVertexPosition(index.topRight);
-			SetVertexPosition(index.topRight);
-			SetVertexPosition(index.bottomLeft);
-			SetVertexPosition(index.bottomLeft);
-			SetVertexPosition(index.topLeft);
-
-			//---------------------------------------------------------------- Second triangle vertex positions
-			SetVertexPosition(index.bottomLeft);
-			SetVertexPosition(index.topRight);
-			SetVertexPosition(index.topRight);
-			SetVertexPosition(index.bottomRight);
-			SetVertexPosition(index.bottomRight);
-			SetVertexPosition(index.bottomLeft);
+			//---------------------------------------------------------------- Vertex positions
+			SetVertexPosition(vertex.topLeft);
+			SetVertexPosition(vertex.topRight);
+			SetVertexPosition(vertex.bottomLeft);
+			SetVertexPosition(vertex.bottomLeft);
+			SetVertexPosition(vertex.topRight);
+			SetVertexPosition(vertex.bottomRight);
 		}
 	}
 
@@ -250,10 +372,6 @@ bool Terrain::InitializeBuffers()
 *******************************************************************************************************************/
 void Terrain::Render(Camera* camera)
 {
-	m_basicShader.Bind(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	m_basicShader.UpdateConstantBuffers(m_localTransform, camera);
-
-	Graphics::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, m_buffer.GetVertexBuffer(), &m_stride, &m_offset);
-	Graphics::Instance()->GetDeviceContext()->IASetIndexBuffer(*m_buffer.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
-	Graphics::Instance()->GetDeviceContext()->DrawIndexed(m_buffer.GetIndexCount(), 0, 0);
+	m_terrainShader.Bind(m_transform, camera, nullptr);
+		m_buffer.Render(m_stride, m_offset);
 }

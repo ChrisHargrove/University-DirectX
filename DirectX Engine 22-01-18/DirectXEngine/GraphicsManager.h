@@ -3,7 +3,7 @@
 /*******************************************************************************************************************
 	GraphicsManager.h, GraphicsManager.cpp
 	Created by Kim Kane
-	Last updated: 20/01/2018
+	Last updated: 09/02/2018
 
 	Singleton class that creates and initializes the DirectX graphics API.
 	
@@ -58,6 +58,7 @@ private:
 
 private:
 	int							m_videoCardMemory;
+	const int					m_multiSampleCount, m_multiSampleQuality;
 
 	IDXGISwapChain*				m_swapChain;
 	ID3D11Device*				m_device;

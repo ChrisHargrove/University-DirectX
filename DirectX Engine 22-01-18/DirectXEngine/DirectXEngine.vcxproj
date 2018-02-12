@@ -39,6 +39,7 @@
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="ScreenManager.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TerrainShader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Tracker.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="ScreenManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="TerrainShader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="Tracker.h" />
@@ -75,6 +77,8 @@
     <None Include="Assets\Shaders\basicShader.vs" />
     <None Include="Assets\Shaders\fontShader.ps" />
     <None Include="Assets\Shaders\fontShader.vs" />
+    <None Include="Assets\Shaders\terrainShader.ps" />
+    <None Include="Assets\Shaders\terrainShader.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

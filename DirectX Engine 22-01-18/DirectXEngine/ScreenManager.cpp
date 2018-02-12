@@ -29,8 +29,7 @@ ScreenManager::ScreenManager()	:	m_title("Window Title"),
 									m_vSync(false),
 									m_is3dEnabled(true),
 									m_perspectiveMatrix(XMMatrixIdentity()),
-									m_orthographicMatrix(XMMatrixIdentity()),
-									m_worldMatrix(XMMatrixIdentity())
+									m_orthographicMatrix(XMMatrixIdentity())
 {
 
 	g_applicationHandle = this;
@@ -156,14 +155,14 @@ bool ScreenManager::InitializeWindow(unsigned int width, unsigned int height)
 		m_height = height;
 
 		//-------------------------------------------- Place the window in the middle of the screen.
-		windowPosition.x = (GetSystemMetrics(SM_CXSCREEN) - m_width) / 2;
-		windowPosition.y = (GetSystemMetrics(SM_CYSCREEN) - m_height) / 2;
+		windowPosition.x = (float)(GetSystemMetrics(SM_CXSCREEN) - m_width) / 2;
+		windowPosition.y = (float)(GetSystemMetrics(SM_CYSCREEN) - m_height) / 2;
 
 		DX_LOG("[SCREEN] Fullscreen mode disabled", DX_LOG_EMPTY, LOG_MESSAGE);
 	}
 
 	//-------------------------------------------- Create the window with the screen settings and get the handle to it.
-	m_window = CreateWindow(m_title, m_title, WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, windowPosition.x, windowPosition.y, m_width, m_height, nullptr, nullptr, m_instance, nullptr);
+	m_window = CreateWindow(m_title, m_title, WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, (int)windowPosition.x, (int)windowPosition.y, m_width, m_height, nullptr, nullptr, m_instance, nullptr);
 	//-------------------------------------------- Note: this will show unused in debug mode as 'unable to read memory'. unused is a 'dummy' variable and should be ignored
 
 	//-------------------------------------------- Bring the window up on the screen and set it as main focus.
@@ -243,12 +242,11 @@ void ScreenManager::Enable3DView(bool viewIn3D)
 HWND ScreenManager::GetWindow() const				{ return m_window; }
 float ScreenManager::GetAspectRatio() const			{ return (float)m_width / (float)m_height; }
 HINSTANCE ScreenManager::GetWindowInstance() const	{ return m_instance; }
-unsigned int ScreenManager::GetWidth() const		{ return m_width; }
-unsigned int ScreenManager::GetHeight()	const		{ return m_height; }
+int ScreenManager::GetWidth() const					{ return m_width; }
+int ScreenManager::GetHeight()	const				{ return m_height; }
 bool ScreenManager::IsVSyncEnabled() const			{ return m_vSync; }
 bool ScreenManager::IsFullScreen() const			{ return m_fullScreen; }
 bool ScreenManager::Is3dEnabled() const				{ return m_is3dEnabled; }
 
 XMMATRIX ScreenManager::GetPerspectiveMatrix()	{ return m_perspectiveMatrix; }
-XMMATRIX ScreenManager::GetWorldMatrix()		{ return m_worldMatrix; }
 XMMATRIX ScreenManager::GetOrthographicMatrix() { return m_orthographicMatrix; }

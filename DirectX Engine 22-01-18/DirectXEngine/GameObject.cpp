@@ -102,20 +102,13 @@ void GameObject::UpdateWorldMatrix()
 }
 
 
-void GameObject::Update(ID3D11DeviceContext* deviceContext)
+void GameObject::Update()
 {
-	deviceContext->UpdateSubresource(m_worldBuffer, 0, 0, &GetWorldMatrix(), 0, 0);
-	deviceContext->VSSetConstantBuffers(0, 1, &m_worldBuffer);
+
 }
 
 void GameObject::Render(Camera* camera) {
 	
-	m_basicShader.Bind();
-	m_basicShader.UpdateConstantBuffers(_WorldMatrix, camera);
-
-	//only enable these lines when using a shader that supports textures
-	//Graphics::Instance()->GetDeviceContext()->PSSetShaderResources(0, 1, m_objectTexture->GetTexture());
-	//Graphics::Instance()->GetDeviceContext()->PSSetSamplers(0, 1, m_objectTexture->GetSampler());
-
-	_ObjectModel->Render();
+	m_basicShader.Bind(_WorldMatrix, camera, m_objectTexture);
+		_ObjectModel->Render();
 }

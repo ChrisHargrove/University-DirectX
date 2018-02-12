@@ -55,7 +55,7 @@ bool Game::Initialize(HINSTANCE instance, LPCSTR title, bool fullScreen, bool vS
 /*******************************************************************************************************************
 	The main game loop, integrated with Windows
 *******************************************************************************************************************/
-bool Game::Run() {
+int Game::Run() {
 
 	//---------------------------------------------------------------- Initialize all our trackers - Delta time, FPS, CPU
 	Tracker::Initialize();

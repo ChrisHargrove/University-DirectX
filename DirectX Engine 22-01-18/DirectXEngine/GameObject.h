@@ -11,7 +11,7 @@
 #include "Texture.h"
 #include "BasicShader.h"
 
-class GameObject : public AlignedAllocationPolicy<Byte16>
+class GameObject : public AlignedAllocationPolicy<BYTE_16>
 {
 public:
 	GameObject();
@@ -31,7 +31,7 @@ public:
 
 	void UpdateWorldMatrix();
 
-	void Update(ID3D11DeviceContext* deviceContext);
+	void Update();
 	void Render(Camera* camera);
 
 protected:

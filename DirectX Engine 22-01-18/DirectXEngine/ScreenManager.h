@@ -14,8 +14,9 @@
 #include <d3d11.h>
 #include <xnamath.h>
 #include "Singleton.h"
+#include "AlignedAllocationPolicy.h"
 
-class ScreenManager {
+class ScreenManager : public AlignedAllocationPolicy<BYTE_16> {
 	
 public:
 	friend class Singleton<ScreenManager>;
@@ -32,12 +33,11 @@ public:
 	
 public:
 	float GetAspectRatio() const;
-	unsigned int GetWidth() const;
-	unsigned int GetHeight() const;
+	int GetWidth() const;
+	int GetHeight() const;
 
 public:
 	XMMATRIX GetPerspectiveMatrix();
-	XMMATRIX GetWorldMatrix();
 	XMMATRIX GetOrthographicMatrix();
 
 public:
@@ -62,7 +62,7 @@ private:
 	HINSTANCE		m_instance;
 	HWND			m_window;
 
-	unsigned int	m_width, m_height;
+	int				m_width, m_height;
 
 	bool			m_fullScreen;
 	bool			m_vSync;
@@ -70,7 +70,6 @@ private:
 
 	XMMATRIX		m_perspectiveMatrix;
 	XMMATRIX		m_orthographicMatrix;
-	XMMATRIX		m_worldMatrix;
 };
 
 typedef Singleton<ScreenManager> Screen;

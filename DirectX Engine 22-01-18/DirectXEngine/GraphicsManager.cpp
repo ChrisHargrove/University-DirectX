@@ -6,6 +6,8 @@
 	Constructor with initializer list to set all default values of variables
 *******************************************************************************************************************/
 GraphicsManager::GraphicsManager()	:	m_videoCardMemory(0),
+										m_multiSampleCount(8),
+										m_multiSampleQuality(0),
 										m_swapChain(nullptr),
 										m_device(nullptr),
 										m_deviceContext(nullptr),
@@ -107,54 +109,55 @@ bool GraphicsManager::InitializeSwapChain(unsigned int numerator, unsigned int d
 	DXGI_SWAP_CHAIN_DESC swapChainDescription = { 0 };
 
 	//-------------------------------------------- Set to a single back buffer
-	swapChainDescription.BufferCount = 1;
+	swapChainDescription.BufferCount							= 1;
 
 	//-------------------------------------------- Set the width and height of the back buffer
-	swapChainDescription.BufferDesc.Width = Screen::Instance()->GetWidth();
-	swapChainDescription.BufferDesc.Height = Screen::Instance()->GetHeight();
+	swapChainDescription.BufferDesc.Width						= Screen::Instance()->GetWidth();
+	swapChainDescription.BufferDesc.Height						= Screen::Instance()->GetHeight();
 	
 	//-------------------------------------------- Set regular 32-bit surface for the back buffer
-	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDescription.BufferDesc.Format						= DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	//-------------------------------------------- Set the refresh rate of the back buffer
 	if (Screen::Instance()->IsVSyncEnabled())
 	{
-		swapChainDescription.BufferDesc.RefreshRate.Numerator = numerator;
+		swapChainDescription.BufferDesc.RefreshRate.Numerator	= numerator;
 		swapChainDescription.BufferDesc.RefreshRate.Denominator = denominator;
 		
 		DX_LOG("[GRAPHICS] Vsync mode enabled", DX_LOG_EMPTY, LOG_MESSAGE);
 	}
 	else
 	{
-		swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
+		swapChainDescription.BufferDesc.RefreshRate.Numerator	= 0;
 		swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
 
 		DX_LOG("[GRAPHICS] Vsync mode disabled", DX_LOG_EMPTY, LOG_MESSAGE);
 	}
 
 	//-------------------------------------------- Set the usage of the back buffer
-	swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDescription.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	//-------------------------------------------- Set the handle for the window to render to
-	swapChainDescription.OutputWindow = Screen::Instance()->GetWindow();
+	swapChainDescription.OutputWindow							= Screen::Instance()->GetWindow();
 
 	//-------------------------------------------- Multisampling descriptions
-	swapChainDescription.SampleDesc.Count = 1;
-	swapChainDescription.SampleDesc.Quality = 0;
+	swapChainDescription.SampleDesc.Count						= m_multiSampleCount;
+	swapChainDescription.SampleDesc.Quality						= m_multiSampleQuality;
 
 	//-------------------------------------------- Set to full screen or windowed mode
 	if (Screen::Instance()->IsFullScreen()) { swapChainDescription.Windowed = false; }
 	else									{ swapChainDescription.Windowed = true; }
 
 	//-------------------------------------------- Set the scan line ordering and scaling to unspecified
-	swapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	swapChainDescription.BufferDesc.ScanlineOrdering			= DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	swapChainDescription.BufferDesc.Scaling						= DXGI_MODE_SCALING_UNSPECIFIED;
 
 	//-------------------------------------------- Discard the back buffer contents after presenting
-	swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	swapChainDescription.SwapEffect								= DXGI_SWAP_EFFECT_DISCARD;
 
 	//-------------------------------------------- Don't set the advanced flags
-	swapChainDescription.Flags = 0;
+	swapChainDescription.Flags									= 0;
+
 
 	D3D_DRIVER_TYPE driverType;
 
@@ -219,47 +222,47 @@ bool GraphicsManager::InitializeDepthStencilFilters()
 	HRESULT result = S_OK;
 
 	//---------------------------------------------------------------- Initialize the description of the depth buffer
-	D3D11_TEXTURE2D_DESC depthBufferDesccription = { 0 };
+	D3D11_TEXTURE2D_DESC depthBufferDescription = { 0 };
 
 	//---------------------------------------------------------------- Set up the description of the depth buffer
-	depthBufferDesccription.Width = Screen::Instance()->GetWidth();
-	depthBufferDesccription.Height = Screen::Instance()->GetHeight();
-	depthBufferDesccription.MipLevels = 1;
-	depthBufferDesccription.ArraySize = 1;
-	depthBufferDesccription.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthBufferDesccription.SampleDesc.Count = 1;
-	depthBufferDesccription.SampleDesc.Quality = 0;
-	depthBufferDesccription.Usage = D3D11_USAGE_DEFAULT;
-	depthBufferDesccription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthBufferDesccription.CPUAccessFlags = 0;
-	depthBufferDesccription.MiscFlags = 0;
+	depthBufferDescription.Width				= Screen::Instance()->GetWidth();
+	depthBufferDescription.Height				= Screen::Instance()->GetHeight();
+	depthBufferDescription.MipLevels			= 1;
+	depthBufferDescription.ArraySize			= 1;
+	depthBufferDescription.Format				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthBufferDescription.SampleDesc.Count		= m_multiSampleCount;
+	depthBufferDescription.SampleDesc.Quality	= m_multiSampleQuality;
+	depthBufferDescription.Usage				= D3D11_USAGE_DEFAULT;
+	depthBufferDescription.BindFlags			= D3D11_BIND_DEPTH_STENCIL;
+	depthBufferDescription.CPUAccessFlags		= 0;
+	depthBufferDescription.MiscFlags			= 0;
 
 	//---------------------------------------------------------------- Create the texture for the depth buffer using the filled out description
-	result = m_device->CreateTexture2D(&depthBufferDesccription, nullptr, &m_depthStencilBuffer);
+	result = m_device->CreateTexture2D(&depthBufferDescription, nullptr, &m_depthStencilBuffer);
 	if (FAILED(result)) { DX_LOG("[GRAPHICS] Couldn't create depth buffer texture", DX_LOG_EMPTY, LOG_ERROR); return false; }
 
 	//---------------------------------------------------------------- Initialize the description of the depth stencil state
 	D3D11_DEPTH_STENCIL_DESC depthStencilDescription = { 0 };
 
 	//---------------------------------------------------------------- Set up the description of the depth stencil state
-	depthStencilDescription.DepthEnable = true;
-	depthStencilDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDescription.DepthFunc = D3D11_COMPARISON_LESS;
-	depthStencilDescription.StencilEnable = true;
-	depthStencilDescription.StencilReadMask = 0xFF;
-	depthStencilDescription.StencilWriteMask = 0xFF;
+	depthStencilDescription.DepthEnable			= true;
+	depthStencilDescription.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDescription.DepthFunc			= D3D11_COMPARISON_LESS;
+	depthStencilDescription.StencilEnable		= true;
+	depthStencilDescription.StencilReadMask		= 0xFF;
+	depthStencilDescription.StencilWriteMask	= 0xFF;
 
 	//---------------------------------------------------------------- Stencil operations if pixel is front-facing
-	depthStencilDescription.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDescription.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	depthStencilDescription.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDescription.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDescription.FrontFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
+	depthStencilDescription.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_INCR;
+	depthStencilDescription.FrontFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
+	depthStencilDescription.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
 
 	//---------------------------------------------------------------- Stencil operations if pixel is back-facing
-	depthStencilDescription.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDescription.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	depthStencilDescription.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDescription.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDescription.BackFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
+	depthStencilDescription.BackFace.StencilDepthFailOp		= D3D11_STENCIL_OP_DECR;
+	depthStencilDescription.BackFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
+	depthStencilDescription.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
 
 	//---------------------------------------------------------------- Create the depth stencil state
 	result = m_device->CreateDepthStencilState(&depthStencilDescription, &m_depthStencilState);
@@ -272,9 +275,9 @@ bool GraphicsManager::InitializeDepthStencilFilters()
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription = {};
 
 	//---------------------------------------------------------------- Set up the depth stencil view description
-	depthStencilViewDescription.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewDescription.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStencilViewDescription.Texture2D.MipSlice = 0;
+	depthStencilViewDescription.Format				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDescription.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	depthStencilViewDescription.Texture2D.MipSlice	= 0;
 
 	//---------------------------------------------------------------- Create the depth stencil view
 	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDescription, &m_depthStencilView);
@@ -288,20 +291,20 @@ bool GraphicsManager::InitializeDepthStencilFilters()
 
 	//----------------------------------------------------------------  Now create a second depth stencil state which turns off the Z buffer for 2D rendering.  The only difference is 
 	//----------------------------------------------------------------  that DepthEnable is set to false, all other parameters are the same as the other depth stencil state.
-	depthDisabledStencilDescription.DepthEnable = false;
-	depthDisabledStencilDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthDisabledStencilDescription.DepthFunc = D3D11_COMPARISON_LESS;
-	depthDisabledStencilDescription.StencilEnable = true;
-	depthDisabledStencilDescription.StencilReadMask = 0xFF;
-	depthDisabledStencilDescription.StencilWriteMask = 0xFF;
-	depthDisabledStencilDescription.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthDisabledStencilDescription.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	depthDisabledStencilDescription.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthDisabledStencilDescription.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-	depthDisabledStencilDescription.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthDisabledStencilDescription.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	depthDisabledStencilDescription.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	depthDisabledStencilDescription.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthDisabledStencilDescription.DepthEnable						= false;
+	depthDisabledStencilDescription.DepthWriteMask					= D3D11_DEPTH_WRITE_MASK_ALL;
+	depthDisabledStencilDescription.DepthFunc						= D3D11_COMPARISON_LESS;
+	depthDisabledStencilDescription.StencilEnable					= true;
+	depthDisabledStencilDescription.StencilReadMask					= 0xFF;
+	depthDisabledStencilDescription.StencilWriteMask				= 0xFF;
+	depthDisabledStencilDescription.FrontFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDescription.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_INCR;
+	depthDisabledStencilDescription.FrontFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDescription.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+	depthDisabledStencilDescription.BackFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDescription.BackFace.StencilDepthFailOp		= D3D11_STENCIL_OP_DECR;
+	depthDisabledStencilDescription.BackFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDescription.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
 
 	//---------------------------------------------------------------- Create the disabled depth stencil state
 	result = m_device->CreateDepthStencilState(&depthDisabledStencilDescription, &m_depthDisabledStencilState);
@@ -322,16 +325,19 @@ bool GraphicsManager::InitializeRasterizerState()
 
 	//---------------------------------------------------------------- Setup the raster description which will determine how and what polygons will be drawn
 	D3D11_RASTERIZER_DESC rasterizerDescription = {};
-	rasterizerDescription.AntialiasedLineEnable = false;
-	rasterizerDescription.CullMode = D3D11_CULL_BACK;
-	rasterizerDescription.DepthBias = 0;
-	rasterizerDescription.DepthBiasClamp = 0.0f;
-	rasterizerDescription.DepthClipEnable = true;
-	rasterizerDescription.FillMode = D3D11_FILL_SOLID;
-	rasterizerDescription.FrontCounterClockwise = false;
-	rasterizerDescription.MultisampleEnable = false;
-	rasterizerDescription.ScissorEnable = false;
-	rasterizerDescription.SlopeScaledDepthBias = 0.0f;
+
+	rasterizerDescription.AntialiasedLineEnable		= false;
+	rasterizerDescription.CullMode					= D3D11_CULL_BACK;
+	//RasterizerDesc.FillMode						= D3D11_FILL_WIREFRAME;
+	//RasterizerDesc.CullMode						= D3D11_CULL_NONE;
+	rasterizerDescription.DepthBias					= 0;
+	rasterizerDescription.DepthBiasClamp			= 0.0f;
+	rasterizerDescription.DepthClipEnable			= true;
+	rasterizerDescription.FillMode					= D3D11_FILL_SOLID;
+	rasterizerDescription.FrontCounterClockwise		= false;
+	rasterizerDescription.MultisampleEnable			= true;
+	rasterizerDescription.ScissorEnable				= false;
+	rasterizerDescription.SlopeScaledDepthBias		= 0.0f;
 
 	//---------------------------------------------------------------- Create the rasterizer state from the description we just filled out
 	result = m_device->CreateRasterizerState(&rasterizerDescription, &m_rasterState);
@@ -352,12 +358,13 @@ bool GraphicsManager::InitializeRasterizerState()
 void GraphicsManager::InitializeViewport()
 {
 	D3D11_VIEWPORT viewport = { 0 };
-	viewport.Width = (float)Screen::Instance()->GetWidth();
-	viewport.Height = (float)Screen::Instance()->GetHeight();
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0.0f;
-	viewport.TopLeftY = 0.0f;
+
+	viewport.Width		= (float)Screen::Instance()->GetWidth();
+	viewport.Height		= (float)Screen::Instance()->GetHeight();
+	viewport.MinDepth	= 0.0f;
+	viewport.MaxDepth	= 1.0f;
+	viewport.TopLeftX	= 0.0f;
+	viewport.TopLeftY	= 0.0f;
 
 	//---------------------------------------------------------------- Create the viewport
 	m_deviceContext->RSSetViewports(1, &viewport);
@@ -377,14 +384,14 @@ bool GraphicsManager::InitializeAlphaBlendingState()
 	D3D11_BLEND_DESC blendStateDescription = { 0 };
 
 	//---------------------------------------------------------------- Create an alpha enabled blend state description
-	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
-	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	blendStateDescription.RenderTarget[0].BlendEnable				= TRUE;
+	blendStateDescription.RenderTarget[0].SrcBlend					= D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlend					= D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].BlendOp					= D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha				= D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha			= D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha				= D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask		= 0x0f;
 
 	//---------------------------------------------------------------- Create the blend state using the description above
 	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendingState);
@@ -431,8 +438,7 @@ bool GraphicsManager::InitializeInterface()
 	if (FAILED(result)) { DX_LOG("[GRAPHICS] Problem obtaining display format", DX_LOG_EMPTY, LOG_ERROR); return false; }
 
 	//---------------------------------------------------------------- Create a list to hold all the possible display modes for this monitor/video card combination
-	DXGI_MODE_DESC* displayModeList = nullptr;
-	displayModeList = new DXGI_MODE_DESC[numModes];
+	DXGI_MODE_DESC* displayModeList = new DXGI_MODE_DESC[numModes];
 	if (!displayModeList) { DX_LOG("[GRAPHICS] Couldn't create display mode list object", DX_LOG_EMPTY, LOG_ERROR); return false; }
 
 	//---------------------------------------------------------------- Now fill the display mode list structures
@@ -449,7 +455,7 @@ bool GraphicsManager::InitializeInterface()
 		{
 			if (displayModeList[i].Height == (unsigned int)Screen::Instance()->GetHeight())
 			{
-				numerator = displayModeList[i].RefreshRate.Numerator;
+				numerator	= displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
 			}
 		}
@@ -476,7 +482,7 @@ bool GraphicsManager::InitializeInterface()
 	DX_LOG("[GRAPHICS] DirectX interface initialized successfully", DX_LOG_EMPTY, LOG_SUCCESS);
 
 	//---------------------------------------------------------------- Initialize the DirectX device and swap chain
-	InitializeSwapChain(numerator, denominator);
+	if (!InitializeSwapChain(numerator, denominator)) { return false; }
 
 	return true;
 }

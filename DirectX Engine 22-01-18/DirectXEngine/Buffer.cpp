@@ -30,7 +30,7 @@ Buffer::~Buffer()
 /*******************************************************************************************************************
 	Function that sends user-defined or OBJ model vertex data to the GPU
 *******************************************************************************************************************/
-bool Buffer::Push(const std::vector<PackedVertex>& vertices) {
+bool Buffer::Push(const std::vector<BufferConstants::PackedVertex>& vertices) {
 	
 	HRESULT result = S_OK;
 
@@ -43,7 +43,7 @@ bool Buffer::Push(const std::vector<PackedVertex>& vertices) {
 	D3D11_BUFFER_DESC vertexDescription = { 0 };
 	vertexDescription.Usage = D3D11_USAGE_DEFAULT;
 	vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexDescription.ByteWidth = sizeof(PackedVertex) * vertices.size();
+	vertexDescription.ByteWidth = sizeof(BufferConstants::PackedVertex) * vertices.size();
 
 	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
 	vertexData.pSysMem = &vertices.front();
@@ -96,7 +96,7 @@ bool Buffer::Push(const std::vector<unsigned int>& indices)
 /*******************************************************************************************************************
 	Function that sends user-defined terrain vertex data to the GPU
 *******************************************************************************************************************/
-bool Buffer::Push(const std::vector<TerrainVertexType>& vertices)
+bool Buffer::Push(const std::vector<BufferConstants::PackedTerrainVertex>& vertices)
 {
 	HRESULT result = S_OK;
 
@@ -107,7 +107,7 @@ bool Buffer::Push(const std::vector<TerrainVertexType>& vertices)
 	D3D11_BUFFER_DESC vertexDescription = { 0 };
 	vertexDescription.Usage = D3D11_USAGE_DEFAULT;
 	vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexDescription.ByteWidth = sizeof(TerrainVertexType) * vertices.size();
+	vertexDescription.ByteWidth = sizeof(BufferConstants::PackedTerrainVertex) * vertices.size();
 
 	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
 	vertexData.pSysMem = &vertices.front();
@@ -156,6 +156,18 @@ bool Buffer::Push(const std::vector<unsigned long>& indices)
 
 
 /*******************************************************************************************************************
+	Function that renders the GPU buffer data to the screen
+*******************************************************************************************************************/
+void Buffer::Render(unsigned int stride, unsigned int offset) const
+{
+	Graphics::Instance()->GetDeviceContext()->IASetVertexBuffers(0, 1, &m_vertexBufferObject, &stride, &offset);
+	Graphics::Instance()->GetDeviceContext()->IASetIndexBuffer(m_indexBufferObject, DXGI_FORMAT_R32_UINT, 0);
+
+	Graphics::Instance()->GetDeviceContext()->DrawIndexed(m_indexCount, 0, 0);
+}
+
+
+/*******************************************************************************************************************
 	Accessor Methods
 *******************************************************************************************************************/
 unsigned int Buffer::GetIndexCount() const	{ return m_indexCount; }
@@ -195,16 +207,23 @@ void Buffer::UnlockConstantBuffer(ID3D11Buffer* constantBuffer)
 }
 
 
-void Buffer::SetConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer)
+void Buffer::SetVertexConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer)
 {
 	//-------------------------------------------- Sets the constant buffer in the vertex shader with the updated values
 	Graphics::Instance()->GetDeviceContext()->VSSetConstantBuffers(location, 1, &constantBuffer);
 }
 
+void Buffer::SetPixelConstantBuffer(unsigned int location, ID3D11Buffer* constantBuffer)
+{
+	//-------------------------------------------- Sets the constant buffer in the pixel shader with the updated values
+	Graphics::Instance()->GetDeviceContext()->PSSetConstantBuffers(location, 1, &constantBuffer);
+}
+
+
 
 bool Buffer::CreateConstantBuffer(ID3D11Buffer** constantBuffer, UINT bufferByteSize)
 {
-	//-------------------------------------------- Set up the description of the dynamic constant buffer that is in the vertex shader
+	//-------------------------------------------- Set up the description of the dynamic constant buffer that is in the shader
 	HRESULT result = S_OK;
 	D3D11_BUFFER_DESC bufferDescription = { 0 };
 	bufferDescription.Usage = D3D11_USAGE_DYNAMIC;

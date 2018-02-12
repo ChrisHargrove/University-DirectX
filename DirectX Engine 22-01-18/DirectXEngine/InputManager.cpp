@@ -127,8 +127,8 @@ void InputManager::UpdateMousePosition()
 /*******************************************************************************************************************
 	Accessor Methods
 *******************************************************************************************************************/
-bool InputManager::IsKeyPressed(unsigned short key) const		{ return m_keyState[key] & 0x80; }
-bool InputManager::IsButtonPressed(unsigned char button) const	{ return m_mouseState.rgbButtons[button] & 0x80; }
+int InputManager::IsKeyPressed(unsigned short key) const		{ return m_keyState[key] & 0x80; }
+int InputManager::IsButtonPressed(unsigned char button) const	{ return m_mouseState.rgbButtons[button] & 0x80; }
 
 POINT InputManager::GetMousePosition() const	{ return m_mousePosition; }
 

@@ -68,12 +68,12 @@ bool ObjLoader::LoadObjFile(const char* fileLocation, std::vector<XMFLOAT3>& out
 *******************************************************************************************************************/
 void ObjLoader::PushData(std::vector<XMFLOAT3>& outVertices, std::vector<XMFLOAT2>& outTextureCoords, std::vector<XMFLOAT3>& outNormals, std::vector<unsigned int>& outIndices)
 {
-	std::map<PackedVertex, unsigned int> vertexToOutIndex;
+	std::map<BufferConstants::PackedVertex, unsigned int> vertexToOutIndex;
 
 	//---------------------------------------------------------------- For each vertex stored in our m_vertices vector
 	for (unsigned int i = 0; i < m_vertices.size(); i++) {
 
-		PackedVertex packed = { m_vertices[i], m_textureCoords[i], m_normals[i] };
+		BufferConstants::PackedVertex packed = { m_vertices[i], m_textureCoords[i], m_normals[i] };
 
 		//---------------------------------------------------------------- Try to find a similar vertex in our vectors
 		unsigned int index;
@@ -103,10 +103,10 @@ void ObjLoader::PushData(std::vector<XMFLOAT3>& outVertices, std::vector<XMFLOAT
 /*******************************************************************************************************************
 	Function that checks if we have a similar vertex already stored
 *******************************************************************************************************************/
-bool ObjLoader::GetSimilarVertexIndex(PackedVertex& packed, std::map<PackedVertex, unsigned int>& vertexToOutIndex, unsigned int& result)
+bool ObjLoader::GetSimilarVertexIndex(BufferConstants::PackedVertex& packed, std::map<BufferConstants::PackedVertex, unsigned int>& vertexToOutIndex, unsigned int& result)
 {
 	//---------------------------------------------------------------- Loop through the map, looking for a vertex
-	std::map<PackedVertex, unsigned int>::iterator it = vertexToOutIndex.find(packed);
+	std::map<BufferConstants::PackedVertex, unsigned int>::iterator it = vertexToOutIndex.find(packed);
 
 	//---------------------------------------------------------------- If vertex is not found in the map, then we need to add it in the IndexVBO function, so return false
 	if (it == vertexToOutIndex.end()) { return false; }
@@ -201,15 +201,15 @@ void ObjLoader::GetIndices(std::vector<unsigned int>& vertexIndices, std::vector
 				>> vertexIndex.z >> textureCoordIndex.z >> normalIndex.z;
 
 	//---------------------------------------------------------------- Loop through all the index values obtained above, and store them in to our faces (indices) vectors
-		vertexIndices.push_back(vertexIndex.x);
-		textureCoordIndices.push_back(textureCoordIndex.x);
-		normalIndices.push_back(normalIndex.x);
+		vertexIndices.push_back((const unsigned int)vertexIndex.x);
+		textureCoordIndices.push_back((const unsigned int)textureCoordIndex.x);
+		normalIndices.push_back((const unsigned int)normalIndex.x);
 
-		vertexIndices.push_back(vertexIndex.y);
-		textureCoordIndices.push_back(textureCoordIndex.y);
-		normalIndices.push_back(normalIndex.y);
+		vertexIndices.push_back((const unsigned int)vertexIndex.y);
+		textureCoordIndices.push_back((const unsigned int)textureCoordIndex.y);
+		normalIndices.push_back((const unsigned int)normalIndex.y);
 
-		vertexIndices.push_back(vertexIndex.z);
-		textureCoordIndices.push_back(textureCoordIndex.z);
-		normalIndices.push_back(normalIndex.z);
+		vertexIndices.push_back((const unsigned int)vertexIndex.z);
+		textureCoordIndices.push_back((const unsigned int)textureCoordIndex.z);
+		normalIndices.push_back((const unsigned int)normalIndex.z);
 }
