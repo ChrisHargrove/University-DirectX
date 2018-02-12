@@ -161,9 +161,15 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\Game\GameObjects</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="PhysicsObject.cpp">
+      <Filter>Source Files\Game\GameObjects</Filter>
+=======
     <ClCompile Include="TerrainShader.cpp">
       <Filter>Source Files\Engine\Shaders</Filter>
+>>>>>>> master
     </ClCompile>
+    <ClCompile Include="Actor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -177,6 +183,7 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Game\Graphics</Filter>
+<<<<<<< HEAD
     </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>Header Files\Game\Graphics</Filter>
@@ -184,6 +191,15 @@
     <ClInclude Include="BasicShader.h">
       <Filter>Header Files\Engine\Shaders</Filter>
     </ClInclude>
+=======
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files\Game\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicShader.h">
+      <Filter>Header Files\Engine\Shaders</Filter>
+    </ClInclude>
+>>>>>>> master
     <ClInclude Include="Singleton.h">
       <Filter>Header Files\Engine\Tools</Filter>
     </ClInclude>
@@ -192,10 +208,17 @@
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Header Files\Engine\Managers</Filter>
+<<<<<<< HEAD
     </ClInclude>
     <ClInclude Include="ScreenManager.h">
       <Filter>Header Files\Engine\Managers</Filter>
     </ClInclude>
+=======
+    </ClInclude>
+    <ClInclude Include="ScreenManager.h">
+      <Filter>Header Files\Engine\Managers</Filter>
+    </ClInclude>
+>>>>>>> master
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Engine\Buffers</Filter>
     </ClInclude>
@@ -216,6 +239,7 @@
     </ClInclude>
     <ClInclude Include="AlignedAllocationPolicy.h">
       <Filter>Header Files\Engine\Tools</Filter>
+<<<<<<< HEAD
     </ClInclude>
     <ClInclude Include="Tracker.h">
       <Filter>Header Files\Engine\Tools</Filter>
@@ -229,6 +253,21 @@
     <ClInclude Include="PlayState.h">
       <Filter>Header Files\Game\GameStates</Filter>
     </ClInclude>
+=======
+    </ClInclude>
+    <ClInclude Include="Tracker.h">
+      <Filter>Header Files\Engine\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>Header Files\Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayState.h">
+      <Filter>Header Files\Game\GameStates</Filter>
+    </ClInclude>
+>>>>>>> master
     <ClInclude Include="AnimatedGameObject.h">
       <Filter>Header Files\Game\GameObjects</Filter>
     </ClInclude>
@@ -241,8 +280,16 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\Game\GameObjects</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files\Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Header Files</Filter>
+=======
     <ClInclude Include="TerrainShader.h">
       <Filter>Header Files\Engine\Shaders</Filter>
+>>>>>>> master
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,11 +305,14 @@
     <None Include="Assets\Shaders\fontShader.vs">
       <Filter>Source Files\Engine\Shaders</Filter>
     </None>
+<<<<<<< HEAD
+=======
     <None Include="Assets\Shaders\terrainShader.ps">
       <Filter>Source Files\Engine\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\terrainShader.vs">
       <Filter>Source Files\Engine\Shaders</Filter>
     </None>
+>>>>>>> master
   </ItemGroup>
 </Project>

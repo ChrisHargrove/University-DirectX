@@ -25,8 +25,13 @@ public:
 	void Shutdown();
 
 public:
+<<<<<<< HEAD
+	bool IsKeyPressed(unsigned short key) const;
+	bool IsButtonPressed(unsigned char button) const;
+=======
 	int IsKeyPressed(unsigned short key) const;
 	int IsButtonPressed(unsigned char button) const;
+>>>>>>> master
 
 public:
 	POINT GetMousePosition() const;

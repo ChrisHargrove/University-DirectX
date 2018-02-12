@@ -10,8 +10,11 @@
 
 *******************************************************************************************************************/
 #include <string>
+<<<<<<< HEAD
+=======
 #include <d3d11.h>
 #include <xnamath.h>
+>>>>>>> master
 
 namespace FileConstants {
 
@@ -33,7 +36,11 @@ namespace FileConstants {
 		NORMALS_TITLE_OFFSET		= 3,
 		FACES_TITLE_OFFSET			= 2,
 		RGB_OFFSET					= 3,
+<<<<<<< HEAD
+		HEIGHTMAP_VERTICES			= 12
+=======
 		HEIGHTMAP_VERTICES			= 6
+>>>>>>> master
 	};
 }
 
@@ -78,6 +85,8 @@ namespace GraphicConstants {
 namespace MathsConstants {
 	
 	const float Radians = 0.0174532925f;
+<<<<<<< HEAD
+=======
 }
 
 
@@ -97,4 +106,5 @@ namespace BufferConstants {
 			return memcmp((void*)this, (void*)&that, sizeof(PackedVertex))>0;
 		};
 	};
+>>>>>>> master
 }

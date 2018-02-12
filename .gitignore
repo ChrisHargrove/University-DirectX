@@ -11,4 +11,8 @@
 /DirectX Engine 22-01-18/Release
 *.db
 *.opendb
+<<<<<<< HEAD
+*.ipch
+=======
 /DirectX Engine 22-01-18/DirectXEngine/.vs/DirectXEngine/v15/ipch/AutoPCH
+>>>>>>> master

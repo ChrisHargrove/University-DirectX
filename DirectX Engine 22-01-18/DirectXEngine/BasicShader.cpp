@@ -7,7 +7,10 @@
 #include "Camera.h"
 #include "Buffer.h"
 #include "Log.h"
+<<<<<<< HEAD
+=======
 #include "Texture.h"
+>>>>>>> master
 
 /*******************************************************************************************************************
 	Constructor with initializer list to set all default values of variables
@@ -40,8 +43,13 @@ bool BasicShader::LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation
 {
 	HRESULT result = S_OK;
 
+<<<<<<< HEAD
+	ID3D10Blob* errorMessage = nullptr;
+	ID3D10Blob* vertexShaderBuffer = nullptr;
+=======
 	ID3D10Blob* errorMessage		= nullptr;
 	ID3D10Blob* vertexShaderBuffer	= nullptr;
+>>>>>>> master
 
 	//-------------------------------------------- Compile the vertex shader code
 	result = D3DCompileFromFile(vertexFileLocation, nullptr, nullptr, "VertexMain", "vs_4_0",
@@ -87,7 +95,11 @@ bool BasicShader::LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation
 	//-------------------------------------------- Create the layout description
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+<<<<<<< HEAD
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+=======
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+>>>>>>> master
 	};
 
 	//-------------------------------------------- Create vertex input layout
@@ -105,7 +117,11 @@ bool BasicShader::LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation
 	pixelShaderBuffer = nullptr;
 	
 	//-------------------------------------------- Create the constant buffer within the shader, so we can access the data from the CPU
+<<<<<<< HEAD
+	if (!Buffer::CreateConstantBuffer(&m_matrixBuffer, sizeof(MatrixBufferType))) { return false; }
+=======
 	if (!Buffer::CreateConstantBuffer(&m_matrixBuffer, sizeof(MatrixBufferData))) { return false; }
+>>>>>>> master
 
 	return true;
 }
@@ -128,7 +144,14 @@ void BasicShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* file
 	file.open("ShaderErrors.txt");
 
 	//-------------------------------------------- Write out the error message
+<<<<<<< HEAD
+	for (unsigned long i = 0; i < bufferSize; i++)
+	{
+		file << compileErrors[i];
+	}
+=======
 	for (unsigned long i = 0; i < bufferSize; i++) { file << compileErrors[i]; }
+>>>>>>> master
 
 	//-------------------------------------------- Close file and release error message pointer
 	file.close();
@@ -152,6 +175,16 @@ bool BasicShader::UpdateConstantBuffers(XMMATRIX& world, Camera* camera)
 	}
 
 	//-------------------------------------------- Get the model transform matrix, camera view matrix, and screen projection matrix
+<<<<<<< HEAD
+	XMMATRIX worldMatrix = world;
+	XMMATRIX viewMatrix = camera->GetViewMatrix();
+	XMMATRIX projectionMatrix = (Screen::Instance()->Is3dEnabled())	? Screen::Instance()->GetPerspectiveMatrix()
+																	: Screen::Instance()->GetOrthographicMatrix();
+	//-------------------------------------------- Transpose these matrices to prepare them for the shader
+	worldMatrix = XMMatrixTranspose(worldMatrix);
+	viewMatrix = XMMatrixTranspose(viewMatrix);
+	projectionMatrix = XMMatrixTranspose(projectionMatrix);
+=======
 	XMMATRIX worldMatrix		= world;
 	XMMATRIX viewMatrix			= camera->GetViewMatrix();
 	XMMATRIX projectionMatrix	= (Screen::Instance()->Is3dEnabled())	? Screen::Instance()->GetPerspectiveMatrix()
@@ -160,13 +193,18 @@ bool BasicShader::UpdateConstantBuffers(XMMATRIX& world, Camera* camera)
 	worldMatrix			= XMMatrixTranspose(worldMatrix);
 	viewMatrix			= XMMatrixTranspose(viewMatrix);
 	projectionMatrix	= XMMatrixTranspose(projectionMatrix);
+>>>>>>> master
 	
 	//-------------------------------------------- Create a subresource here so we can access the data later, and lock the constant buffer so we can write to it
 	D3D11_MAPPED_SUBRESOURCE mappedResource = { 0 };
 	if (!Buffer::LockConstantBuffer(m_matrixBuffer, mappedResource)) { return false; }
 
 	//-------------------------------------------- Get a pointer to the data in the constant buffer
+<<<<<<< HEAD
+	MatrixBufferType* data = (MatrixBufferType*)mappedResource.pData;
+=======
 	MatrixBufferData* data = (MatrixBufferData*)mappedResource.pData;
+>>>>>>> master
 
 	//-------------------------------------------- Copy the matrices above into the constant buffer
 	data->world			= worldMatrix;
@@ -177,16 +215,26 @@ bool BasicShader::UpdateConstantBuffers(XMMATRIX& world, Camera* camera)
 	Buffer::UnlockConstantBuffer(m_matrixBuffer);
 
 	//-------------------------------------------- Finally, set the constant buffer in the vertex shader with the updated values
+<<<<<<< HEAD
+	Buffer::SetConstantBuffer(0, m_matrixBuffer);
+=======
 	Buffer::SetVertexConstantBuffer(0, m_matrixBuffer);
+>>>>>>> master
 
 	return true;
 }
 
 
 /*******************************************************************************************************************
+<<<<<<< HEAD
+	Function that sets this shader and vertex layout as the active shader and layout
+*******************************************************************************************************************/
+void BasicShader::Bind(D3D_PRIMITIVE_TOPOLOGY renderMode) const
+=======
 	Function that sets this shader and vertex layout as the active shader and layout & sets shader parameters
 *******************************************************************************************************************/
 void BasicShader::Bind(XMMATRIX& world, Camera* camera, Texture* texture, D3D_PRIMITIVE_TOPOLOGY renderMode)
+>>>>>>> master
 {
 	//-------------------------------------------- Set the vertex input layout
 	Graphics::Instance()->GetDeviceContext()->IASetInputLayout(m_layout);
@@ -197,6 +245,8 @@ void BasicShader::Bind(XMMATRIX& world, Camera* camera, Texture* texture, D3D_PR
 	//-------------------------------------------- Set the vertex and pixel shaders that will be used to render this object
 	Graphics::Instance()->GetDeviceContext()->VSSetShader(m_vertexShader, nullptr, 0);
 	Graphics::Instance()->GetDeviceContext()->PSSetShader(m_pixelShader, nullptr, 0);
+<<<<<<< HEAD
+=======
 
 	UpdateConstantBuffers(world, camera);
 	SetTexture(texture);
@@ -212,4 +262,5 @@ void BasicShader::SetTexture(Texture* texture)
 		Graphics::Instance()->GetDeviceContext()->PSSetShaderResources(0, 1, texture->GetTexture());
 		Graphics::Instance()->GetDeviceContext()->PSSetSamplers(0, 1, texture->GetSampler());
 	}
+>>>>>>> master
 }

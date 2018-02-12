@@ -54,8 +54,13 @@ bool MenuState::Initialize() {
 	if (!m_laraTexture.LoadTexture("Assets\\Textures\\Lara.png")) { return false; };
 	if (!m_cubeTexture.LoadTexture("Assets\\Textures\\Cube.jpg")) { return false; };
 
+<<<<<<< HEAD
+	m_laraObject = new Actor(XMFLOAT3(50.0, 10.5, 20.0), &m_laraModel, &m_laraTexture);
+	//m_cubeObject = new GameObject(XMFLOAT3(10.0, 1.5, 20.0), &m_cubeModel, &m_cubeTexture);
+=======
 	m_laraObject = new GameObject(XMFLOAT3(50.0, 10.5, 20.0), &m_laraModel, &m_laraTexture);
 	m_cubeObject = new GameObject(XMFLOAT3(10.0, 1.5, 20.0), &m_cubeModel, &m_cubeTexture);
+>>>>>>> master
 
 
 	/////////////////////////////////////////////////////////
@@ -102,6 +107,41 @@ void MenuState::Update(float deltaTime) {
 	float move = 0.01f * deltaTime;
 	//TESTING--DONT TOUCH!...................Seems to work :)
 
+<<<<<<< HEAD
+	////X AXIS
+	//if (Input::Instance()->IsKeyPressed(DIK_A)) { m_laraObject->TranslateX(-move); } //LEFT
+	//if (Input::Instance()->IsKeyPressed(DIK_D)) { m_laraObject->TranslateX(move); } //RIGHT
+
+	////Z AXIS
+	//if (Input::Instance()->IsKeyPressed(DIK_W)) { m_laraObject->TranslateZ(move); } //FORWARD
+	//if (Input::Instance()->IsKeyPressed(DIK_S)) { m_laraObject->TranslateZ(-move); } //BACK
+	//
+	////Y AXIS
+	//if (Input::Instance()->IsKeyPressed(DIK_T)) { m_laraObject->TranslateY(move); } //UP
+	//if (Input::Instance()->IsKeyPressed(DIK_B)) { m_laraObject->TranslateY(-move); } //DOWN
+
+
+    /////////////////////////////////////////////////////////
+    //  Testing Physics
+    /////////////////////////////////////////////////////////
+    //X AXIS
+    if (Input::Instance()->IsKeyPressed(DIK_A)) { m_laraObject->ApplyForce(XMVectorSet(-0.1f, 0, 0, 0)); } //LEFT
+    if (Input::Instance()->IsKeyPressed(DIK_D)) {
+        m_laraObject->ApplyForce(XMVectorSet(0.1f, 0, 0, 0));
+    } //RIGHT
+
+    //Z AXIS
+    if (Input::Instance()->IsKeyPressed(DIK_W)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, 0.1f, 0)); } //FORWARD
+    if (Input::Instance()->IsKeyPressed(DIK_S)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, -0.1f, 0)); } //BACK
+
+    //Y AXIS
+    if (Input::Instance()->IsKeyPressed(DIK_SPACE)) { m_laraObject->ApplyForce(XMVectorSet(0, 0.8f, 0, 0)); } //UP
+    if (Input::Instance()->IsKeyPressed(DIK_LCONTROL)) { m_laraObject->ApplyForce(XMVectorSet(0, -0.8f, 0, 0)); } //DOWN
+
+
+    m_laraObject->Update();
+    m_laraObject->ApplyFriction(0.5f);
+=======
 	//X AXIS
 	if (Input::Instance()->IsKeyPressed(DIK_A)) { m_laraObject->TranslateX(-move); } //LEFT
 	if (Input::Instance()->IsKeyPressed(DIK_D)) { m_laraObject->TranslateX(move); } //RIGHT
@@ -117,6 +157,7 @@ void MenuState::Update(float deltaTime) {
 
 
 
+>>>>>>> master
 
 	/////////////////////////////////////////////////////////
 	//  END OF INPUT TESTING
@@ -135,6 +176,7 @@ void MenuState::Draw() {
 	
 	//---------------------------------------------------------------- Clear the screen
 	Graphics::Instance()->BeginScene(0.2f, 0.2f, 0.4f, 1.0f);
+<<<<<<< HEAD
 
 	Graphics::Instance()->EnableDepthBuffer(false);
 	Graphics::Instance()->EnableAlphaBlending(true);
@@ -154,6 +196,27 @@ void MenuState::Draw() {
 	Graphics::Instance()->EnableDepthBuffer(true);
 	Graphics::Instance()->EnableAlphaBlending(false);
 
+=======
+
+	Graphics::Instance()->EnableDepthBuffer(false);
+	Graphics::Instance()->EnableAlphaBlending(true);
+
+	////////////////////////////////////////////////
+	//  BEGIN 2D RENDERING
+	////////////////////////////////////////////////
+
+
+
+
+
+	////////////////////////////////////////////////
+	// END OF 2D RENDERING
+	////////////////////////////////////////////////
+
+	Graphics::Instance()->EnableDepthBuffer(true);
+	Graphics::Instance()->EnableAlphaBlending(false);
+
+>>>>>>> master
 	////////////////////////////////////////////////
 	//  BEGIN 3D RENDERING
 	////////////////////////////////////////////////
@@ -162,7 +225,11 @@ void MenuState::Draw() {
 
 
 	m_laraObject->Render(m_camera);
+<<<<<<< HEAD
+	//m_cubeObject->Render(m_camera);
+=======
 	m_cubeObject->Render(m_camera);
+>>>>>>> master
 
 
 	////////////////////////////////////////////////

@@ -14,8 +14,13 @@ cbuffer MatrixBuffer
 *******************************************************************************************************************/
 struct VertexInput
 {
+<<<<<<< HEAD
+    float4 position : POSITION;
+    float4 color : COLOR;
+=======
     float4 position 		: POSITION;
 	float2 textureCoord 	: TEXCOORD0;
+>>>>>>> master
 };
 
 
@@ -24,8 +29,13 @@ struct VertexInput
 *******************************************************************************************************************/
 struct PixelOutput
 {
+<<<<<<< HEAD
+    float4 position : SV_POSITION;
+    float4 color	: COLOR;
+=======
     float4 position 		: SV_POSITION;
 	float2 textureCoord 	: TEXCOORD0;
+>>>>>>> master
 };
 
 
@@ -44,9 +54,15 @@ PixelOutput VertexMain(VertexInput vertexInput)
     pixelOutput.position = mul(pixelOutput.position, viewMatrix);
     pixelOutput.position = mul(pixelOutput.position, projectionMatrix);
     
+<<<<<<< HEAD
+	//--------------------------------------------  Store the input color for the pixel shader to use
+    pixelOutput.color = vertexInput.color;
+    
+=======
 	//--------------------------------------------  Store the input texture for the pixel shader to use
     pixelOutput.textureCoord = vertexInput.textureCoord;
 	
+>>>>>>> master
 	//-------------------------------------------- Send the data to the pixel shader
     return pixelOutput;
 }
