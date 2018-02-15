@@ -16,3 +16,8 @@
 =======
 /DirectX Engine 22-01-18/DirectXEngine/.vs/DirectXEngine/v15/ipch/AutoPCH
 >>>>>>> master
+/DirectX Engine/Debug
+/DirectX Engine/Release
+/DirectX Engine/DirectXEngine/Debug
+/DirectX Engine/DirectXEngine/Release
+/DirectX Engine/DirectXEngine/x64/Debug
