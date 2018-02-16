@@ -16,6 +16,8 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Actor.h"
+#include "Text.h"
+
 
 class MenuState : public GameState {
 
@@ -42,4 +44,7 @@ private:
 
 	Actor* m_laraObject;
 	GameObject* m_cubeObject;
+
+    Text* _Text;
+    Texture* _FontTexture;
 };

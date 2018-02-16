@@ -1,13 +1,3 @@
-/*******************************************************************************************************************
-	Constant buffer data coming in from the CPU
-*******************************************************************************************************************/
-cbuffer PerFrameBuffer
-{
-	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
-};
-
 
 /*******************************************************************************************************************
 	Vertex data coming in from the models
@@ -37,12 +27,7 @@ PixelOutput VertexMain(VertexInput vertexInput)
     PixelOutput pixelOutput;
 
 	//-------------------------------------------- Change the position vector to be 4 units for proper matrix calculations
-    vertexInput.position.w = 1.0f;
-
-	//--------------------------------------------  Calculate the position of the vertex against the world, view, and projection matrices
-    pixelOutput.position = mul(vertexInput.position, worldMatrix);
-    pixelOutput.position = mul(pixelOutput.position, viewMatrix);
-    pixelOutput.position = mul(pixelOutput.position, projectionMatrix);
+    pixelOutput.position = vertexInput.position;
     
 	//-------------------------------------------- Store the texture coordinates for the pixel shader to use
 	pixelOutput.tex = vertexInput.tex;

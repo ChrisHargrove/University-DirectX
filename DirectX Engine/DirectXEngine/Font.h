@@ -27,17 +27,17 @@ public:
 	Font(const Font&);
 	~Font();
 
-	bool Initialize(ID3D11Device* device, char* fontFileLocation, const char* textureFileLocation);
+	bool Initialize(char* fontFileLocation, const char* textureFileLocation);
 	void Shutdown();
 
-	ID3D11ShaderResourceView* GetTexture();
+	Texture* GetTexture();
 
 	void BuildVertexArray(void*, char*, float, float);
 
 private:
 	bool LoadFontData(char* fileLocation);
 	void ReleaseFontData();
-	bool LoadTexture(ID3D11Device* device, const char* fileLocation);
+	bool LoadTexture(const char* fileLocation);
 	void ReleaseTexture();
 
 private:

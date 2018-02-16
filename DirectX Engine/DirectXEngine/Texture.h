@@ -14,8 +14,12 @@ public:
 
 public:
 	bool LoadTexture(const char* fileLocation);
+    float GetWidth() { return _Width; }
+    float GetHeight() { return _Height; }
 
 private:
+    float _Width, _Height;
+
 	ID3D11ShaderResourceView*	m_texture;
 	ID3D11SamplerState*			m_textureSampler;
 };

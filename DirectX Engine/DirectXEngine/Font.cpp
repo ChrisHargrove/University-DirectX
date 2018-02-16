@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "GraphicsManager.h"
 
 Font::Font()
 {
@@ -14,7 +15,7 @@ Font::~Font()
 {
 }
 
-bool Font::Initialize(ID3D11Device* device, char* fontFileLocation, const char* textureFileLocation)
+bool Font::Initialize(char* fontFileLocation, const char* textureFileLocation)
 {
 	bool result;
 
@@ -27,7 +28,7 @@ bool Font::Initialize(ID3D11Device* device, char* fontFileLocation, const char* 
 	}
 
 	// Load the texture that has the font characters on it.
-	result = LoadTexture(device, textureFileLocation);
+	result = LoadTexture(textureFileLocation);
 	if (!result)
 	{
 		return false;
@@ -45,10 +46,10 @@ void Font::Shutdown()
 	ReleaseFontData();
 }
 
-//ID3D11ShaderResourceView * Font::GetTexture()
-//{
-	//return m_texture->GetTexture();
-//}
+Texture * Font::GetTexture()
+{
+    return m_texture;
+}
 
 void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY)
 {
@@ -166,24 +167,15 @@ void Font::ReleaseFontData()
 
 }
 
-bool Font::LoadTexture(ID3D11Device* device, const char* fileLocation)
+bool Font::LoadTexture(const char* fileLocation)
 {
-	bool result = true;
-
-
 	// Create the texture object.
-	m_texture = new Texture;
+	m_texture = new Texture();
 	if (!m_texture)
 	{
 		return false;
 	}
-
-	// Initialize the texture object.
-	//result = m_texture->Initialize(device, fileLocation);
-	if (!result)
-	{
-		return false;
-	}
+    m_texture->LoadTexture(fileLocation);
 
 	return true;
 }

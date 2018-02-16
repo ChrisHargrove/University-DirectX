@@ -20,6 +20,11 @@ Texture::~Texture()
 bool Texture::LoadTexture(const char* fileLocation)
 {
 	HRESULT result = S_OK;
+    D3DX11_IMAGE_INFO info;
+    D3DX11GetImageInfoFromFile(fileLocation, nullptr, &info, nullptr);
+
+    _Height = info.Height;
+    _Width = info.Width;
 
 	result = D3DX11CreateShaderResourceViewFromFile(Graphics::Instance()->GetDevice(), fileLocation, 0, 0, &m_texture, 0);
 	if (FAILED(result)) { DX_LOG("[TEXTURE] Failed to create texture: ", fileLocation, LOG_ERROR); return false; }
@@ -53,7 +58,6 @@ bool Texture::LoadTexture(const char* fileLocation)
 	colorMapDescription.MinLOD = 0;
 	colorMapDescription.MaxLOD = D3D11_FLOAT32_MAX;
 	result = Graphics::Instance()->GetDevice()->CreateSamplerState(&colorMapDescription, &m_textureSampler);
-
 
 	if (FAILED(result)) {
 		DX_LOG("[TEXTURE] Failed to create colour map sampler state", DX_LOG_EMPTY, LOG_ERROR);

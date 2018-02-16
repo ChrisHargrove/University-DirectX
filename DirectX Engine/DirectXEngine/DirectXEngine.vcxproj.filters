@@ -165,10 +165,16 @@
       <Filter>Source Files\Engine\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Game\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsObject.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="TextShader.cpp">
+      <Filter>Source Files\Engine\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Game\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,10 +257,16 @@
       <Filter>Header Files\Engine\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Actor.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TextShader.h">
+      <Filter>Header Files\Engine\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Game\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

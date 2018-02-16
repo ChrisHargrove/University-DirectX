@@ -23,6 +23,8 @@ MenuState::MenuState(GameState* previousState)	:	GameState(previousState)
 MenuState::~MenuState() {
 	
 	if (m_terrain) { delete m_terrain; m_terrain = nullptr; }
+    delete _Text;
+    delete _FontTexture;
 
 	DX_LOG("[MENU STATE] MenuState destructor initialized", DX_LOG_EMPTY, LOG_MESSAGE);
 }
@@ -45,9 +47,6 @@ bool MenuState::Initialize() {
 	m_terrain = new Terrain();
 	if (!m_terrain->Initialize("Assets\\Terrain\\heightMap.bmp")) { return false; }
 
-
-
-
 	if (!m_laraModel.Load("Assets\\Objects\\Lara.obj")) { return false; };
 	if (!m_cubeModel.Load("Assets\\Objects\\Cube.obj")) { return false; };
 
@@ -55,7 +54,10 @@ bool MenuState::Initialize() {
 	if (!m_cubeTexture.LoadTexture("Assets\\Textures\\Cube.jpg")) { return false; };
 
 	m_laraObject = new Actor(XMFLOAT3(50.0, 10.5, 20.0), &m_laraModel, &m_laraTexture);
-	//m_cubeObject = new GameObject(XMFLOAT3(10.0, 1.5, 20.0), &m_cubeModel, &m_cubeTexture);
+
+    _FontTexture = new Texture();
+    _FontTexture->LoadTexture("Assets\\Fonts\\fontEX.png");
+    _Text = new Text(_FontTexture, nullptr);
 
 
 	/////////////////////////////////////////////////////////
@@ -95,25 +97,8 @@ void MenuState::Update(float deltaTime) {
 	if (Input::Instance()->IsButtonPressed(InputConstants::LEFT))	{ m_camera->Rotate(0.0f, -InputConstants::RotateSpeed * deltaTime, 0.0f); }
 	if (Input::Instance()->IsButtonPressed(InputConstants::RIGHT))	{ m_camera->Rotate(0.0f,  InputConstants::RotateSpeed * deltaTime, 0.0f); }
 	m_camera->Rotate(Input::Instance()->GetMouseWheel() / 1000.0f * deltaTime, 0.0f, 0.0f);
-	
-
-
 
 	float move = 0.01f * deltaTime;
-	//TESTING--DONT TOUCH!...................Seems to work :)
-
-	////X AXIS
-	//if (Input::Instance()->IsKeyPressed(DIK_A)) { m_laraObject->TranslateX(-move); } //LEFT
-	//if (Input::Instance()->IsKeyPressed(DIK_D)) { m_laraObject->TranslateX(move); } //RIGHT
-
-	////Z AXIS
-	//if (Input::Instance()->IsKeyPressed(DIK_W)) { m_laraObject->TranslateZ(move); } //FORWARD
-	//if (Input::Instance()->IsKeyPressed(DIK_S)) { m_laraObject->TranslateZ(-move); } //BACK
-	//
-	////Y AXIS
-	//if (Input::Instance()->IsKeyPressed(DIK_T)) { m_laraObject->TranslateY(move); } //UP
-	//if (Input::Instance()->IsKeyPressed(DIK_B)) { m_laraObject->TranslateY(-move); } //DOWN
-
 
     /////////////////////////////////////////////////////////
     //  Testing Physics
@@ -154,20 +139,9 @@ void MenuState::Draw() {
 	//---------------------------------------------------------------- Clear the screen
 	Graphics::Instance()->BeginScene(0.2f, 0.2f, 0.4f, 1.0f);
 
-	Graphics::Instance()->EnableDepthBuffer(false);
-	Graphics::Instance()->EnableAlphaBlending(true);
+	
 
-	////////////////////////////////////////////////
-	//  BEGIN 2D RENDERING
-	////////////////////////////////////////////////
-
-
-
-
-
-	////////////////////////////////////////////////
-	// END OF 2D RENDERING
-	////////////////////////////////////////////////
+	
 
 	Graphics::Instance()->EnableDepthBuffer(true);
 	Graphics::Instance()->EnableAlphaBlending(false);
@@ -178,14 +152,28 @@ void MenuState::Draw() {
 	
 	m_terrain->Render(m_camera);
 
-
 	m_laraObject->Render(m_camera);
+
 	//m_cubeObject->Render(m_camera);
 
-
-	////////////////////////////////////////////////
+    ////////////////////////////////////////////////
 	// END OF 3D RENDERING
 	////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////
+    //  BEGIN 2D RENDERING
+    ////////////////////////////////////////////////
+    Graphics::Instance()->EnableDepthBuffer(false);
+    Graphics::Instance()->EnableAlphaBlending(true);
+
+    _Text->DrawString("FPS: " + std::to_string(Tracker::GetFps()), -0.9f, 0.83f);
+    _Text->DrawString("Frame Time: " + std::to_string(Tracker::GetTime()), -0.9f, 0.75f);
+    _Text->DrawString("CPU%: " + std::to_string(Tracker::GetCpuPercentage()), -0.9f, 0.67f);
+
+    ////////////////////////////////////////////////
+    // END OF 2D RENDERING
+    ////////////////////////////////////////////////
+	
 
 	//---------------------------------------------------------------- Present the rendered scene to the screen
 	Graphics::Instance()->EndScene();
