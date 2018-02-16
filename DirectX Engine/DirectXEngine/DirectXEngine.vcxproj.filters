@@ -176,6 +176,9 @@
     <ClCompile Include="Text.cpp">
       <Filter>Source Files\Game\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Source Files\Game\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -266,6 +269,9 @@
       <Filter>Header Files\Engine\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
+      <Filter>Header Files\Game\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
       <Filter>Header Files\Game\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

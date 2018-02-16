@@ -39,6 +39,14 @@ const XMVECTOR& GameObject::GetPosition() const
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+const XMFLOAT3 GameObject::GetPositionF() const
+{
+    XMFLOAT3 temp;
+    XMStoreFloat3(&temp, _Position);
+    return temp;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const XMMATRIX& GameObject::GetRotationY()
 {
 	return _RotationMatrix;

@@ -48,16 +48,21 @@ bool MenuState::Initialize() {
 	if (!m_terrain->Initialize("Assets\\Terrain\\heightMap.bmp")) { return false; }
 
 	if (!m_laraModel.Load("Assets\\Objects\\Lara.obj")) { return false; };
-	if (!m_cubeModel.Load("Assets\\Objects\\Cube.obj")) { return false; };
+	if (!m_SphereModel.Load("Assets\\Objects\\Sphere.obj")) { return false; };
 
 	if (!m_laraTexture.LoadTexture("Assets\\Textures\\Lara.png")) { return false; };
-	if (!m_cubeTexture.LoadTexture("Assets\\Textures\\Cube.jpg")) { return false; };
+	if (!m_sphereTexture.LoadTexture("Assets\\Textures\\Sphere.jpg")) { return false; };
 
 	m_laraObject = new Actor(XMFLOAT3(50.0, 10.5, 20.0), &m_laraModel, &m_laraTexture);
+
+    for (int i = 0; i < 20; i++) {
+        m_Sphere[i] = new GameObject(XMFLOAT3(100.0f / (1.5f * i), 100.0f / (1.5f * i), 100.0f / (1.5f * i)), &m_SphereModel, &m_sphereTexture);
+    }
 
     _FontTexture = new Texture();
     _FontTexture->LoadTexture("Assets\\Fonts\\fontEX.png");
     _Text = new Text(_FontTexture, nullptr);
+    _CullFrustum = new Frustum();
 
 
 	/////////////////////////////////////////////////////////
@@ -121,13 +126,15 @@ void MenuState::Update(float deltaTime) {
     m_laraObject->Update();
     m_laraObject->ApplyFriction(0.5f);
 
+
+    /////////////////////////////////////////////////////////
+    //  Testing Culling
+    /////////////////////////////////////////////////////////
+    _CullFrustum->Create(m_camera->GetViewMatrix());
+
 	/////////////////////////////////////////////////////////
 	//  END OF INPUT TESTING
 	/////////////////////////////////////////////////////////
-
-	//std::cout << "FPS: " << Tracker::GetFps() << std::endl;
-	//std::cout << "TIME: " << Tracker::GetTime() << std::endl;
-	//std::cout << "CPU: " << Tracker::GetCpuPercentage() << std::endl;
 }
 
 
@@ -138,10 +145,6 @@ void MenuState::Draw() {
 	
 	//---------------------------------------------------------------- Clear the screen
 	Graphics::Instance()->BeginScene(0.2f, 0.2f, 0.4f, 1.0f);
-
-	
-
-	
 
 	Graphics::Instance()->EnableDepthBuffer(true);
 	Graphics::Instance()->EnableAlphaBlending(false);
@@ -154,7 +157,14 @@ void MenuState::Draw() {
 
 	m_laraObject->Render(m_camera);
 
-	//m_cubeObject->Render(m_camera);
+    int renderCount = 0;
+    for (auto s : m_Sphere) {
+        XMFLOAT3 temp = s->GetPositionF();
+        if (_CullFrustum->CheckSphere(temp.x, temp.y, temp.z, 1)) {
+            s->Render(m_camera);
+            renderCount++;
+        }
+    }
 
     ////////////////////////////////////////////////
 	// END OF 3D RENDERING
@@ -169,12 +179,13 @@ void MenuState::Draw() {
     _Text->DrawString("FPS: " + std::to_string(Tracker::GetFps()), -0.9f, 0.83f);
     _Text->DrawString("Frame Time: " + std::to_string(Tracker::GetTime()), -0.9f, 0.75f);
     _Text->DrawString("CPU%: " + std::to_string(Tracker::GetCpuPercentage()), -0.9f, 0.67f);
+    _Text->DrawString("Render Count: " + std::to_string(renderCount), -0.9f, 0.59f);
+
 
     ////////////////////////////////////////////////
     // END OF 2D RENDERING
     ////////////////////////////////////////////////
 	
-
 	//---------------------------------------------------------------- Present the rendered scene to the screen
 	Graphics::Instance()->EndScene();
 

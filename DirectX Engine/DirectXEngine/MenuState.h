@@ -17,6 +17,7 @@
 #include "Texture.h"
 #include "Actor.h"
 #include "Text.h"
+#include "Frustum.h"
 
 
 class MenuState : public GameState {
@@ -37,14 +38,16 @@ private:
 	Terrain* m_terrain;
 
 	Model m_laraModel;
-	Model m_cubeModel;
+	Model m_SphereModel;
 
 	Texture m_laraTexture;
-	Texture m_cubeTexture;
+	Texture m_sphereTexture;
 
 	Actor* m_laraObject;
-	GameObject* m_cubeObject;
+	GameObject* m_Sphere[20];
 
     Text* _Text;
     Texture* _FontTexture;
+
+    Frustum* _CullFrustum;
 };
