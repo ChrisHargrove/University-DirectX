@@ -54,13 +54,14 @@ bool MenuState::Initialize() {
 	if (!m_sphereTexture.LoadTexture("Assets\\Textures\\Sphere.jpg")) { return false; };
 
 	m_laraObject = new Actor(XMFLOAT3(50.0, 10.5, 20.0), &m_laraModel, &m_laraTexture);
+    m_laraObject->RotateY(XM_PIDIV2);
 
     for (int i = 0; i < 20; i++) {
         m_Sphere[i] = new GameObject(XMFLOAT3(100.0f / (1.5f * i), 100.0f / (1.5f * i), 100.0f / (1.5f * i)), &m_SphereModel, &m_sphereTexture);
     }
 
     _FontTexture = new Texture();
-    _FontTexture->LoadTexture("Assets\\Fonts\\fontEX.png");
+    _FontTexture->LoadTexture("Assets\\Fonts\\oriental.png");
     _Text = new Text(_FontTexture, nullptr);
     _CullFrustum = new Frustum();
 
@@ -92,7 +93,8 @@ void MenuState::Update(float deltaTime) {
 	//  BEGIN INPUT TESTING
 	/////////////////////////////////////////////////////////
 
-    m_camera->SetPosition(m_laraObject->GetPositionF().x, m_laraObject->GetPositionF().y + 3, m_laraObject->GetPositionF().z - 12);
+    m_camera->SetPosition(m_laraObject->GetPositionF().x, m_laraObject->GetPositionF().y + 5, m_laraObject->GetPositionF().z - 12);
+    m_camera->SetRotation(15.0f, 0.0f, 0.0f);
 
 	////---------------------------------------------------------------- Keyboard Testing
 	//if (Input::Instance()->IsKeyPressed(DIK_LEFT))	{ m_camera->Move(m_camera->GetRight(),   -InputConstants::Speed * deltaTime); }
@@ -179,13 +181,13 @@ void MenuState::Draw() {
     Graphics::Instance()->EnableDepthBuffer(false);
     Graphics::Instance()->EnableAlphaBlending(true);
 
-    _Text->DrawString("FPS: " + std::to_string(Tracker::GetFps()), -0.9f, 0.83f);
-    _Text->DrawString("Frame Time: " + std::to_string((float)Tracker::GetFps() / 1000.0f), -0.9f, 0.75f);
+    _Text->DrawString("FPS: " + std::to_string(Tracker::GetFps()), -0.9f, 0.83f, XMFLOAT3(1.0f, 0.0f, 0.0f));
+    _Text->DrawString("Frame Time: " + std::to_string(Tracker::GetTime()), -0.9f, 0.75f);
     _Text->DrawString("CPU%: " + std::to_string(Tracker::GetCpuPercentage()), -0.9f, 0.67f);
     _Text->DrawString("Render Count: " + std::to_string(renderCount), -0.9f, 0.59f);
 
-    _Text->DrawString("VelocityX: " + std::to_string(XMVectorGetX(m_laraObject->GetVelocity())), -0.9f, 0.51f);
-    _Text->DrawString("AccelX: " + std::to_string(XMVectorGetX(m_laraObject->GetAcceleration())), -0.9f, 0.43f);
+    _Text->DrawString("VelocityX: " + std::to_string(XMVectorGetX(m_laraObject->GetVelocity())), -0.9f, 0.51f, XMFLOAT3(0.0f, 0.0f, 1.0f));
+    _Text->DrawString("AccelX: " + std::to_string(XMVectorGetX(m_laraObject->GetAcceleration())), -0.9f, 0.43f, XMFLOAT3(1.0f, 0.0f, 1.0f));
 
     ////////////////////////////////////////////////
     // END OF 2D RENDERING

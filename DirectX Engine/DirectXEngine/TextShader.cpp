@@ -1,26 +1,36 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Headers
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include "TextShader.h"
 #include "ScreenManager.h"
 #include "GraphicsManager.h"
 
 #include "Log.h"
 #include "Texture.h"
+#include "Buffer.h"
 
 #include <d3dcompiler.h>
 #include <fstream>
 
-TextShader::TextShader() :  m_vertexShader(nullptr),
-                            m_pixelShader(nullptr),
-                            m_layout(nullptr)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TextShader::TextShader() :  _VertexShader(nullptr),
+                            _PixelShader(nullptr),
+                            _Layout(nullptr),
+                            _PixelColorBuffer(nullptr)
 {
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TextShader::~TextShader()
 {
-    if (m_layout) { m_layout->Release(); m_layout = nullptr; }
-    if (m_pixelShader) { m_pixelShader->Release(); m_pixelShader = nullptr; }
-    if (m_vertexShader) { m_vertexShader->Release(); m_vertexShader = nullptr; }
+    if (_Layout) { _Layout->Release(); _Layout = nullptr; }
+    if (_PixelShader) { _PixelShader->Release(); _PixelShader = nullptr; }
+    if (_VertexShader) { _VertexShader->Release(); _VertexShader = nullptr; }
+    if (_PixelColorBuffer) { _PixelColorBuffer->Release(); _PixelColorBuffer = nullptr; }
+
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool TextShader::LoadShader(WCHAR * vertexFileLocation, WCHAR * pixelFileLocation)
 {
     HRESULT result = S_OK;
@@ -58,13 +68,13 @@ bool TextShader::LoadShader(WCHAR * vertexFileLocation, WCHAR * pixelFileLocatio
     }
 
     //-------------------------------------------- Create the vertex shader from the buffer
-    result = Graphics::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &m_vertexShader);
+    result = Graphics::Instance()->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &_VertexShader);
     if (FAILED(result)) {
         DX_LOG("[BASIC SHADER] Can't create vertex shader", DX_LOG_EMPTY, LOG_ERROR); return false;
     }
 
     //-------------------------------------------- Create the pixel shader from the buffer
-    result = Graphics::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
+    result = Graphics::Instance()->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &_PixelShader);
     if (FAILED(result)) {
         DX_LOG("[BASIC SHADER] Can't create pixel shader", DX_LOG_EMPTY, LOG_ERROR); return false;
     }
@@ -77,7 +87,7 @@ bool TextShader::LoadShader(WCHAR * vertexFileLocation, WCHAR * pixelFileLocatio
 
     //-------------------------------------------- Create vertex input layout
     result = Graphics::Instance()->GetDevice()->CreateInputLayout(layout, _countof(layout), vertexShaderBuffer->GetBufferPointer(),
-        vertexShaderBuffer->GetBufferSize(), &m_layout);
+        vertexShaderBuffer->GetBufferSize(), &_Layout);
     if (FAILED(result)) {
         DX_LOG("[BASIC SHADER] Can't create the input layout", DX_LOG_EMPTY, LOG_ERROR); return false;
     }
@@ -89,24 +99,42 @@ bool TextShader::LoadShader(WCHAR * vertexFileLocation, WCHAR * pixelFileLocatio
     pixelShaderBuffer->Release();
     pixelShaderBuffer = nullptr;
 
+    //Create pixel color buffer
+    if (!Buffer::CreateConstantBuffer(&_PixelColorBuffer, sizeof(PixelColorBuffer))) { return false; }
+
     return true;
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void TextShader::Bind(Texture * texture, D3D_PRIMITIVE_TOPOLOGY renderMode)
 {
     //-------------------------------------------- Set the vertex input layout
-    Graphics::Instance()->GetDeviceContext()->IASetInputLayout(m_layout);
+    Graphics::Instance()->GetDeviceContext()->IASetInputLayout(_Layout);
 
     //-------------------------------------------- Set how this will be drawn - triangles/lines/points, etc.
     Graphics::Instance()->GetDeviceContext()->IASetPrimitiveTopology(renderMode);
 
     //-------------------------------------------- Set the vertex and pixel shaders that will be used to render this object
-    Graphics::Instance()->GetDeviceContext()->VSSetShader(m_vertexShader, nullptr, 0);
-    Graphics::Instance()->GetDeviceContext()->PSSetShader(m_pixelShader, nullptr, 0);
+    Graphics::Instance()->GetDeviceContext()->VSSetShader(_VertexShader, nullptr, 0);
+    Graphics::Instance()->GetDeviceContext()->PSSetShader(_PixelShader, nullptr, 0);
 
     SetTexture(texture);
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bool TextShader::UpdateConstantBuffers(XMFLOAT4 color)
+{
+    D3D11_MAPPED_SUBRESOURCE mappedResource = { 0 };
+    if (!Buffer::LockConstantBuffer(_PixelColorBuffer, mappedResource)) { return false; }
+    PixelColorBuffer* colorData = (PixelColorBuffer*)mappedResource.pData;
+    colorData->_PixelColor = color;
+    Buffer::UnlockConstantBuffer(_PixelColorBuffer);
+    Buffer::SetPixelConstantBuffer(0, _PixelColorBuffer);
+
+    return true;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void TextShader::OutputShaderErrorMessage(ID3D10Blob * errorMessage, WCHAR * fileLocation)
 {
     std::ofstream file;
@@ -132,6 +160,7 @@ void TextShader::OutputShaderErrorMessage(ID3D10Blob * errorMessage, WCHAR * fil
     MessageBox(Screen::Instance()->GetWindow(), "Error compiling shader.  Check ShaderErrors.txt for message.", (LPCSTR)fileLocation, MB_OK);
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void TextShader::SetTexture(Texture * texture)
 {
     if (texture != nullptr) {

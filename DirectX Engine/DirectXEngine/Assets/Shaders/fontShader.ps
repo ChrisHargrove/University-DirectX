@@ -4,6 +4,11 @@
 Texture2D shaderTexture;
 SamplerState SampleType;
 
+cbuffer PixelColorBuffer
+{
+    float4 pixelColor;
+};
+
 
 /*******************************************************************************************************************
 	Data coming in from vertex shader
@@ -22,5 +27,5 @@ float4 PixelMain(PixelOutput pixelOutput) : SV_TARGET
 {
 	float4 color;
 	//-------------------------------------------- Sample the texture pixel at this location
-	return color = shaderTexture.Sample(SampleType, pixelOutput.tex);
+	return color = pixelColor * shaderTexture.Sample(SampleType, pixelOutput.tex);
 }

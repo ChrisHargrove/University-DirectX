@@ -30,18 +30,6 @@
     <Filter Include="Header Files\Game\GameComponents">
       <UniqueIdentifier>{59453d7d-cc31-4c91-9bdb-6f9001618eed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game\Interface">
-      <UniqueIdentifier>{7e636294-1aaf-4f5d-b847-7cae556b1583}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Game\Interface\Font">
-      <UniqueIdentifier>{c079e85d-f4ce-4d4c-ba0a-0aed8f07b649}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Game\Interface">
-      <UniqueIdentifier>{732065eb-74fd-4c0e-be97-31cfed6bd4d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Game\Interface\Font">
-      <UniqueIdentifier>{07e9a575-58c4-42f1-b14c-8b52b48fa5e1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Game\Graphics">
       <UniqueIdentifier>{a8e02a3f-9eb2-492c-9698-1ef9e4b33625}</UniqueIdentifier>
     </Filter>
@@ -97,9 +85,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Game\GameComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>Source Files\Game\Interface\Font</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Game\Graphics</Filter>
@@ -186,9 +171,6 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Game\GameComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Header Files\Game\Interface\Font</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Game\Graphics</Filter>

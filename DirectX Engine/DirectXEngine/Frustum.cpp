@@ -1,16 +1,21 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Headers
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include "Frustum.h"
 #include "ScreenManager.h"
 #include "Constants.h"
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Frustum::Frustum()
 {
 }
 
-
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Frustum::~Frustum()
 {
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void Frustum::Create(XMMATRIX view)
 {
     float zMin, r;
@@ -68,10 +73,9 @@ void Frustum::Create(XMMATRIX view)
         matrix._34 + matrix._32, matrix._44 + matrix._42
     );
     _Planes[5] = XMPlaneNormalize(_Planes[5]);
-
-    
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool Frustum::CheckPoint(float x, float y, float z)
 {
     //check if point is inside planes
@@ -83,6 +87,7 @@ bool Frustum::CheckPoint(float x, float y, float z)
     return true;
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool Frustum::CheckCube(float centerX, float centerY, float centerZ, float radius)
 {
     //check if any one point of cube is inside frustum
@@ -116,6 +121,7 @@ bool Frustum::CheckCube(float centerX, float centerY, float centerZ, float radiu
     return true;
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool Frustum::CheckSphere(float centerX, float centerY, float centerZ, float radius)
 {
     //check to see if radius of sphere is inside frustum
@@ -127,6 +133,7 @@ bool Frustum::CheckSphere(float centerX, float centerY, float centerZ, float rad
     return true;
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool Frustum::CheckRectangle(float centerX, float centerY, float centerZ, float sizeX, float sizeY, float sizeZ)
 {
     //check to see if any 6 planes of rectangle are in view frustum
