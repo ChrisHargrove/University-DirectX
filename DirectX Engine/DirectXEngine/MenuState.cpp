@@ -92,31 +92,34 @@ void MenuState::Update(float deltaTime) {
 	//  BEGIN INPUT TESTING
 	/////////////////////////////////////////////////////////
 
-	//---------------------------------------------------------------- Keyboard Testing
-	if (Input::Instance()->IsKeyPressed(DIK_LEFT))	{ m_camera->Move(m_camera->GetRight(),   -InputConstants::Speed * deltaTime); }
-	if (Input::Instance()->IsKeyPressed(DIK_RIGHT)) { m_camera->Move(m_camera->GetRight(),	  InputConstants::Speed * deltaTime); }
-	if (Input::Instance()->IsKeyPressed(DIK_DOWN))	{ m_camera->Move(m_camera->GetForward(), -InputConstants::Speed * deltaTime); }
-	if (Input::Instance()->IsKeyPressed(DIK_UP))	{ m_camera->Move(m_camera->GetForward(),  InputConstants::Speed * deltaTime); }
+    m_camera->SetPosition(m_laraObject->GetPositionF().x, m_laraObject->GetPositionF().y + 3, m_laraObject->GetPositionF().z - 12);
 
-	//---------------------------------------------------------------- Mouse Testing
-	if (Input::Instance()->IsButtonPressed(InputConstants::LEFT))	{ m_camera->Rotate(0.0f, -InputConstants::RotateSpeed * deltaTime, 0.0f); }
-	if (Input::Instance()->IsButtonPressed(InputConstants::RIGHT))	{ m_camera->Rotate(0.0f,  InputConstants::RotateSpeed * deltaTime, 0.0f); }
-	m_camera->Rotate(Input::Instance()->GetMouseWheel() / 1000.0f * deltaTime, 0.0f, 0.0f);
+	////---------------------------------------------------------------- Keyboard Testing
+	//if (Input::Instance()->IsKeyPressed(DIK_LEFT))	{ m_camera->Move(m_camera->GetRight(),   -InputConstants::Speed * deltaTime); }
+	//if (Input::Instance()->IsKeyPressed(DIK_RIGHT)) { m_camera->Move(m_camera->GetRight(),	  InputConstants::Speed * deltaTime); }
+	//if (Input::Instance()->IsKeyPressed(DIK_DOWN))	{ m_camera->Move(m_camera->GetForward(), -InputConstants::Speed * deltaTime); }
+	//if (Input::Instance()->IsKeyPressed(DIK_UP))	{ m_camera->Move(m_camera->GetForward(),  InputConstants::Speed * deltaTime); }
 
-	float move = 0.01f * deltaTime;
+	////---------------------------------------------------------------- Mouse Testing
+	//if (Input::Instance()->IsButtonPressed(InputConstants::LEFT))	{ m_camera->Rotate(0.0f, -InputConstants::RotateSpeed * deltaTime, 0.0f); }
+	//if (Input::Instance()->IsButtonPressed(InputConstants::RIGHT))	{ m_camera->Rotate(0.0f,  InputConstants::RotateSpeed * deltaTime, 0.0f); }
+	//m_camera->Rotate(Input::Instance()->GetMouseWheel() / 1000.0f * deltaTime, 0.0f, 0.0f);
+
+	//float move = 0.01f * deltaTime;
 
     /////////////////////////////////////////////////////////
     //  Testing Physics
     /////////////////////////////////////////////////////////
     //X AXIS
-    if (Input::Instance()->IsKeyPressed(DIK_A)) { m_laraObject->ApplyForce(XMVectorSet(-0.1f, 0, 0, 0)); } //LEFT
-    if (Input::Instance()->IsKeyPressed(DIK_D)) {
-        m_laraObject->ApplyForce(XMVectorSet(0.1f, 0, 0, 0));
+    m_laraObject->SetMass(10.0f);
+
+    if (Input::Instance()->IsKeyPressed(DIK_A)) { m_laraObject->ApplyForce(XMVectorSet(-0.25f, 0, 0, 0)); } //LEFT
+    if (Input::Instance()->IsKeyPressed(DIK_D)) { m_laraObject->ApplyForce(XMVectorSet(0.25f, 0, 0, 0));
     } //RIGHT
 
     //Z AXIS
-    if (Input::Instance()->IsKeyPressed(DIK_W)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, 0.1f, 0)); } //FORWARD
-    if (Input::Instance()->IsKeyPressed(DIK_S)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, -0.1f, 0)); } //BACK
+    if (Input::Instance()->IsKeyPressed(DIK_W)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, 0.25f, 0)); } //FORWARD
+    if (Input::Instance()->IsKeyPressed(DIK_S)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, -0.25f, 0)); } //BACK
 
     //Y AXIS
     if (Input::Instance()->IsKeyPressed(DIK_SPACE)) { m_laraObject->ApplyForce(XMVectorSet(0, 0.8f, 0, 0)); } //UP
@@ -124,7 +127,7 @@ void MenuState::Update(float deltaTime) {
 
 
     m_laraObject->Update();
-    m_laraObject->ApplyFriction(0.5f);
+    m_laraObject->ApplyFriction(0.4f);
 
 
     /////////////////////////////////////////////////////////
@@ -177,10 +180,12 @@ void MenuState::Draw() {
     Graphics::Instance()->EnableAlphaBlending(true);
 
     _Text->DrawString("FPS: " + std::to_string(Tracker::GetFps()), -0.9f, 0.83f);
-    _Text->DrawString("Frame Time: " + std::to_string(Tracker::GetTime()), -0.9f, 0.75f);
+    _Text->DrawString("Frame Time: " + std::to_string((float)Tracker::GetFps() / 1000.0f), -0.9f, 0.75f);
     _Text->DrawString("CPU%: " + std::to_string(Tracker::GetCpuPercentage()), -0.9f, 0.67f);
     _Text->DrawString("Render Count: " + std::to_string(renderCount), -0.9f, 0.59f);
 
+    _Text->DrawString("VelocityX: " + std::to_string(XMVectorGetX(m_laraObject->GetVelocity())), -0.9f, 0.51f);
+    _Text->DrawString("AccelX: " + std::to_string(XMVectorGetX(m_laraObject->GetAcceleration())), -0.9f, 0.43f);
 
     ////////////////////////////////////////////////
     // END OF 2D RENDERING

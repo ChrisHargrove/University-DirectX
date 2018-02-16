@@ -18,8 +18,8 @@ void Actor::Update()
     SetAcceleration(XMVectorSet(0, 0, 0, 0));
     Translate(GetVelocity());
 
-    if (XMVectorGetX(XMVector4Length(GetVelocity())) < 0.5f) {
-        SetVelocity(XMVectorSet(0, 0, 0, 0));
+    if (XMVectorGetX(XMVector4Length(GetAcceleration())) < 0.1f) {
+        //SetAcceleration(XMVectorSet(0, 0, 0, 0));
     }
 
    // deviceContext->UpdateSubresource(m_worldBuffer, 0, 0, &GetWorldMatrix(), 0, 0);

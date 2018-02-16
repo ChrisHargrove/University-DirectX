@@ -112,7 +112,7 @@ void PhysicsObject::ApplyFriction(float Coeficient)
     //Force = -1 * Coeficient of Friction * Normal Force * Unit Length Velocity.
 
     XMVECTOR force = _Velocity;
-    force = XMVector4Normalize(force);   //Get Unit Length of current velocity.
+    //force = XMVector4Normalize(force);   //Get Unit Length of current velocity.
     force *= Coeficient;                 //Multiply by friction coeficient. Assume normal force is 1(flat surface).
     force *= -1.0f;                      //Negate friction so it acts in opposite direction to movement.
     ApplyForce(force);                   //Apply friction force.
