@@ -18,6 +18,7 @@
 #include "Actor.h"
 #include "Text.h"
 #include "Frustum.h"
+#include "QuadTree.h"
 
 
 class MenuState : public GameState {
@@ -50,4 +51,9 @@ private:
     Texture* _FontTexture;
 
     Frustum* _CullFrustum;
+	QuadTree* _BadassQuads;
+
+	Camera* _tempCam;
+	bool camflipped = false;
+
 };

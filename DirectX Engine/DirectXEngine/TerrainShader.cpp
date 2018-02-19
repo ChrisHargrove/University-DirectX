@@ -249,9 +249,11 @@ void TerrainShader::Bind(XMMATRIX& world, Camera* camera, TexturePackage* textur
 
 void TerrainShader::SetTexturePackage(TexturePackage* texturePackage)
 {		
-	for (int i = 0; i < 5; i++) {
-		if (texturePackage->GetPackedTexture(i)->GetTexture() != nullptr) {
-			Graphics::Instance()->GetDeviceContext()->PSSetShaderResources(i, 1, texturePackage->GetPackedTexture(i)->GetTexture());
+	if (texturePackage != nullptr) {
+		for (int i = 0; i < 5; i++) {
+			if (texturePackage->GetPackedTexture(i)->GetTexture() != nullptr) {
+				Graphics::Instance()->GetDeviceContext()->PSSetShaderResources(i, 1, texturePackage->GetPackedTexture(i)->GetTexture());
+			}
 		}
 	}
 }

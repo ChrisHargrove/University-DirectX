@@ -64,6 +64,7 @@ namespace ScreenConstants {
 	const float FieldOfView		= (float)3.141592654f / 4.0f;
 	const float NearView		= 0.1f;
 	const float FarView			= 100.0f;
+	const float ScreenDepth		= FarView - NearView;
 }
 
 

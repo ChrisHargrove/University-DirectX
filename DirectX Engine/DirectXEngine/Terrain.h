@@ -29,6 +29,13 @@ public:
 	bool Initialize(const char* fileLocation);
 	void Render(Camera* camera);
 
+	int GetTerrainIndexCount() { return m_buffer.GetIndexCount(); }
+	std::vector<BufferConstants::PackedTerrainVertex>*	GetTerrainVerts() { return &m_vertices; }
+
+	//we are not keeping this!!! >:(
+	TerrainShader* GetShader() { return &m_terrainShader; }
+	TexturePackage* GetPackage() { return &m_packedTextures; }
+
 private:
 	bool LoadHeightMap(const char* fileLocation);
 	void LevelHeightMap();

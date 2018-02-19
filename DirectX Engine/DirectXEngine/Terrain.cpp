@@ -344,11 +344,10 @@ bool Terrain::InitializeBuffers()
 	unsigned int vertexCount = (offsetTerrainWidth) * (offsetTerrainHeight) * FileConstants::HEIGHTMAP_VERTICES;
 
 	//---------------------------------------------------------------- Set the vertex count of the buffer object
-	m_buffer.SetTerrainVertexCount(vertexCount);
+	//m_buffer.SetTerrainVertexCount(vertexCount);
 	
 	//---------------------------------------------------------------- Set the index count to the same as the vertex count (create a temporary indexCount variable for readability purposes only)
 	unsigned int indexCount = vertexCount;
-	m_buffer.SetTerrainIndexCount(indexCount);
 
 	//---------------------------------------------------------------- Resize vectors to the size of the vertex and index count
 	m_vertices.resize(vertexCount);

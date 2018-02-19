@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "Log.h"
 
+
 /*******************************************************************************************************************
 	Constructor with initializer list to set default values of data members
 *******************************************************************************************************************/
@@ -22,9 +23,11 @@ MenuState::MenuState(GameState* previousState)	:	GameState(previousState)
 *******************************************************************************************************************/
 MenuState::~MenuState() {
 	
-	if (m_terrain) { delete m_terrain; m_terrain = nullptr; }
+	//if (m_terrain) { delete m_terrain; m_terrain = nullptr; }
     delete _Text;
     delete _FontTexture;
+	delete _BadassQuads;
+	delete _CullFrustum;
 
 	DX_LOG("[MENU STATE] MenuState destructor initialized", DX_LOG_EMPTY, LOG_MESSAGE);
 }
@@ -41,8 +44,8 @@ bool MenuState::Initialize() {
 	//---------------------------------------------------------------- Set the projection to 3D
 	Screen::Instance()->Enable3DView(true);
 
-	m_terrain = new Terrain();
-	if (!m_terrain->Initialize("Assets\\Terrain\\heightMap.bmp")) { return false; }
+	//m_terrain = new Terrain();
+	//if (!m_terrain->Initialize("Assets\\Terrain\\heightMap.bmp")) { return false; }
 
 	if (!m_laraModel.Load("Assets\\Objects\\Lara.obj")) { return false; };
 	if (!m_SphereModel.Load("Assets\\Objects\\Sphere.obj")) { return false; };
@@ -61,6 +64,12 @@ bool MenuState::Initialize() {
     _FontTexture->LoadTexture("Fonts\\oriental.png");
     _Text = new Text(_FontTexture, nullptr);
     _CullFrustum = new Frustum();
+
+	_BadassQuads = new QuadTree();
+	_BadassQuads->Initialize(nullptr);
+	_tempCam = new Camera(m_laraObject->GetPositionF().x, m_laraObject->GetPositionF().y + 5, m_laraObject->GetPositionF().z + 12);
+	_tempCam->SetRotation(15.0f, 180.0f, 0.0f);
+	m_camera->SetRotation(15.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -82,7 +91,8 @@ void MenuState::Update(float deltaTime) {
 	}
 
     m_camera->SetPosition(m_laraObject->GetPositionF().x, m_laraObject->GetPositionF().y + 5, m_laraObject->GetPositionF().z - 12);
-    m_camera->SetRotation(15.0f, 0.0f, 0.0f);
+	_tempCam->SetPosition(m_laraObject->GetPositionF().x, m_laraObject->GetPositionF().y + 5, m_laraObject->GetPositionF().z + 12);
+    
 
     m_laraObject->SetMass(10.0f);
 
@@ -93,8 +103,21 @@ void MenuState::Update(float deltaTime) {
     if (Input::Instance()->IsKeyPressed(DIK_SPACE)) { m_laraObject->ApplyForce(XMVectorSet(0, 0.8f, 0, 0)); } //UP
     if (Input::Instance()->IsKeyPressed(DIK_LCONTROL)) { m_laraObject->ApplyForce(XMVectorSet(0, -0.8f, 0, 0)); } //DOWN
 
+	if(Input::Instance()->IsKeyPressed(DIK_V)) { camflipped = !camflipped; } //DOWN
+
     m_laraObject->Update();
     m_laraObject->ApplyFriction(0.8f);
+
+	// Get the current position of the camera.
+	XMVECTOR position = m_laraObject->GetPosition();
+	float height;
+	// Get the height of the triangle that is directly underneath the given camera position.
+	bool foundHeight = _BadassQuads->GetHeightAtPosition(XMVectorGetX(position), XMVectorGetZ(position), height);
+	if (foundHeight)
+	{
+		// If there was a triangle under the camera then position the camera just above it by two units.
+		m_laraObject->SetPosition(XMFLOAT3(XMVectorGetX(position), height + 0.0f, XMVectorGetZ(position)));
+	}
 
     _CullFrustum->Create(m_camera->GetViewMatrix());
 }
@@ -110,22 +133,26 @@ void MenuState::Draw() {
 	Graphics::Instance()->EnableDepthBuffer(true);
 	Graphics::Instance()->EnableAlphaBlending(false);
 
+	Camera* swapCam;
+
+	if (!camflipped) {
+		swapCam = m_camera;
+	}
+	else {
+		swapCam = _tempCam;
+	}
+	
 	////////////////////////////////////////////////
 	//  BEGIN 3D RENDERING
 	////////////////////////////////////////////////
 	
-	m_terrain->Render(m_camera);
+	_BadassQuads->Render(_CullFrustum, nullptr, swapCam);
+	//m_terrain->Render(m_camera);
 
-	m_laraObject->Render(m_camera);
+	m_laraObject->Render(swapCam);
 
     int renderCount = 0;
-    for (auto s : m_Sphere) {
-        XMFLOAT3 temp = s->GetPositionF();
-        if (_CullFrustum->CheckSphere(temp.x, temp.y, temp.z, 1)) {
-            s->Render(m_camera);
-            renderCount++;
-        }
-    }
+
 
     ////////////////////////////////////////////////
     //  BEGIN 2D RENDERING
@@ -136,7 +163,7 @@ void MenuState::Draw() {
     _Text->DrawString("FPS: " + std::to_string(Tracker::GetFps()), -0.9f, 0.83f, XMFLOAT3(1.0f, 0.0f, 0.0f));
     _Text->DrawString("Frame Time: " + std::to_string(Tracker::GetTime()), -0.9f, 0.75f);
     _Text->DrawString("CPU%: " + std::to_string(Tracker::GetCpuPercentage()), -0.9f, 0.67f);
-    _Text->DrawString("Render Count: " + std::to_string(renderCount), -0.9f, 0.59f);
+    _Text->DrawString("Render Count: " + std::to_string(_BadassQuads->GetDrawCount()), -0.9f, 0.59f);
 
     _Text->DrawString("VelocityX: " + std::to_string(XMVectorGetX(m_laraObject->GetVelocity())), -0.9f, 0.51f, XMFLOAT3(0.0f, 0.0f, 1.0f));
     _Text->DrawString("AccelX: " + std::to_string(XMVectorGetX(m_laraObject->GetAcceleration())), -0.9f, 0.43f, XMFLOAT3(1.0f, 0.0f, 1.0f));

@@ -167,6 +167,9 @@
     <ClCompile Include="TexturePackage.cpp">
       <Filter>Header Files\Game\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>Source Files\Game\GameComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -261,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="TexturePackage.h">
       <Filter>Source Files\Game\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Header Files\Game\GameComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

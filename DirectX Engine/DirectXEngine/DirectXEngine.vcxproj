@@ -39,6 +39,7 @@
     <ClCompile Include="objLoader.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PlayState.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="ScreenManager.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainShader.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="objLoader.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PlayState.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="ScreenManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Terrain.h" />

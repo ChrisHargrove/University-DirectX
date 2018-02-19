@@ -104,6 +104,8 @@ bool Buffer::Push(const std::vector<BufferConstants::PackedTerrainVertex>& verti
 		DX_LOG("[TERRAIN VERTEX BUFFER] Terrain vertices vector container is empty", DX_LOG_EMPTY, LOG_ERROR); return false;
 	}
 
+	m_vertexCount = vertices.size();
+
 	D3D11_BUFFER_DESC vertexDescription = { 0 };
 	vertexDescription.Usage = D3D11_USAGE_DEFAULT;
 	vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -134,6 +136,8 @@ bool Buffer::Push(const std::vector<unsigned long>& indices)
 	if (indices.empty()) {
 		DX_LOG("[TERRAIN INDEX BUFFER] Terrain indices vector container is empty", DX_LOG_EMPTY, LOG_ERROR); return false;
 	}
+
+	m_indexCount = indices.size();
 
 	D3D11_BUFFER_DESC indexDescription = { 0 };
 	indexDescription.Usage = D3D11_USAGE_DEFAULT;

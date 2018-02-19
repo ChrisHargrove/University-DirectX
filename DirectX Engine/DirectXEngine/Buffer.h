@@ -28,6 +28,8 @@ public:
 public:
 	void SetTerrainVertexCount(unsigned int vertexCount);
 	void SetTerrainIndexCount(unsigned int indexCount);
+	unsigned int GetTerrainVertexCount() const { return m_vertexCount; }
+	unsigned int GetTerrainIndexCount() const { return m_indexCount; }
 
 public:
 	bool Push(const std::vector<BufferConstants::PackedVertex>& vertices);
