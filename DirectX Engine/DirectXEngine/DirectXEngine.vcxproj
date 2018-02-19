@@ -45,6 +45,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextShader.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TexturePackage.cpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Tracker.cpp" />
   </ItemGroup>
@@ -77,6 +78,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextShader.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TexturePackage.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="Tracker.h" />
   </ItemGroup>

@@ -41,17 +41,14 @@ bool MenuState::Initialize() {
 	//---------------------------------------------------------------- Set the projection to 3D
 	Screen::Instance()->Enable3DView(true);
 
-	/////////////////////////////////////////////////////////
-	//  BEGIN CREATION & INITALIZATION OF OBJECTS TESTING
-	/////////////////////////////////////////////////////////
 	m_terrain = new Terrain();
 	if (!m_terrain->Initialize("Assets\\Terrain\\heightMap.bmp")) { return false; }
 
 	if (!m_laraModel.Load("Assets\\Objects\\Lara.obj")) { return false; };
 	if (!m_SphereModel.Load("Assets\\Objects\\Sphere.obj")) { return false; };
 
-	if (!m_laraTexture.LoadTexture("Assets\\Textures\\Lara.png")) { return false; };
-	if (!m_sphereTexture.LoadTexture("Assets\\Textures\\Sphere.jpg")) { return false; };
+	if (!m_laraTexture.LoadTexture("Lara.png")) { return false; };
+	if (!m_sphereTexture.LoadTexture("Sphere.jpg")) { return false; };
 
 	m_laraObject = new Actor(XMFLOAT3(50.0, 10.5, 20.0), &m_laraModel, &m_laraTexture);
     m_laraObject->RotateY(XM_PIDIV2);
@@ -61,14 +58,9 @@ bool MenuState::Initialize() {
     }
 
     _FontTexture = new Texture();
-    _FontTexture->LoadTexture("Assets\\Fonts\\oriental.png");
+    _FontTexture->LoadTexture("Fonts\\oriental.png");
     _Text = new Text(_FontTexture, nullptr);
     _CullFrustum = new Frustum();
-
-
-	/////////////////////////////////////////////////////////
-	//  END OF CREATION & INITALIZATION OF OBJECTS TESTING
-	/////////////////////////////////////////////////////////
 
 	return true;
 }
@@ -89,57 +81,22 @@ void MenuState::Update(float deltaTime) {
 		IsActive() = IsAlive() = false;
 	}
 
-	/////////////////////////////////////////////////////////
-	//  BEGIN INPUT TESTING
-	/////////////////////////////////////////////////////////
-
     m_camera->SetPosition(m_laraObject->GetPositionF().x, m_laraObject->GetPositionF().y + 5, m_laraObject->GetPositionF().z - 12);
     m_camera->SetRotation(15.0f, 0.0f, 0.0f);
 
-	////---------------------------------------------------------------- Keyboard Testing
-	//if (Input::Instance()->IsKeyPressed(DIK_LEFT))	{ m_camera->Move(m_camera->GetRight(),   -InputConstants::Speed * deltaTime); }
-	//if (Input::Instance()->IsKeyPressed(DIK_RIGHT)) { m_camera->Move(m_camera->GetRight(),	  InputConstants::Speed * deltaTime); }
-	//if (Input::Instance()->IsKeyPressed(DIK_DOWN))	{ m_camera->Move(m_camera->GetForward(), -InputConstants::Speed * deltaTime); }
-	//if (Input::Instance()->IsKeyPressed(DIK_UP))	{ m_camera->Move(m_camera->GetForward(),  InputConstants::Speed * deltaTime); }
-
-	////---------------------------------------------------------------- Mouse Testing
-	//if (Input::Instance()->IsButtonPressed(InputConstants::LEFT))	{ m_camera->Rotate(0.0f, -InputConstants::RotateSpeed * deltaTime, 0.0f); }
-	//if (Input::Instance()->IsButtonPressed(InputConstants::RIGHT))	{ m_camera->Rotate(0.0f,  InputConstants::RotateSpeed * deltaTime, 0.0f); }
-	//m_camera->Rotate(Input::Instance()->GetMouseWheel() / 1000.0f * deltaTime, 0.0f, 0.0f);
-
-	//float move = 0.01f * deltaTime;
-
-    /////////////////////////////////////////////////////////
-    //  Testing Physics
-    /////////////////////////////////////////////////////////
-    //X AXIS
     m_laraObject->SetMass(10.0f);
 
     if (Input::Instance()->IsKeyPressed(DIK_A)) { m_laraObject->ApplyForce(XMVectorSet(-0.25f, 0, 0, 0)); } //LEFT
-    if (Input::Instance()->IsKeyPressed(DIK_D)) { m_laraObject->ApplyForce(XMVectorSet(0.25f, 0, 0, 0));
-    } //RIGHT
-
-    //Z AXIS
+    if (Input::Instance()->IsKeyPressed(DIK_D)) { m_laraObject->ApplyForce(XMVectorSet(0.25f, 0, 0, 0)); } //RIGHT
     if (Input::Instance()->IsKeyPressed(DIK_W)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, 0.25f, 0)); } //FORWARD
     if (Input::Instance()->IsKeyPressed(DIK_S)) { m_laraObject->ApplyForce(XMVectorSet(0, 0, -0.25f, 0)); } //BACK
-
-    //Y AXIS
     if (Input::Instance()->IsKeyPressed(DIK_SPACE)) { m_laraObject->ApplyForce(XMVectorSet(0, 0.8f, 0, 0)); } //UP
     if (Input::Instance()->IsKeyPressed(DIK_LCONTROL)) { m_laraObject->ApplyForce(XMVectorSet(0, -0.8f, 0, 0)); } //DOWN
 
-
     m_laraObject->Update();
-    m_laraObject->ApplyFriction(0.4f);
+    m_laraObject->ApplyFriction(0.8f);
 
-
-    /////////////////////////////////////////////////////////
-    //  Testing Culling
-    /////////////////////////////////////////////////////////
     _CullFrustum->Create(m_camera->GetViewMatrix());
-
-	/////////////////////////////////////////////////////////
-	//  END OF INPUT TESTING
-	/////////////////////////////////////////////////////////
 }
 
 
@@ -150,7 +107,6 @@ void MenuState::Draw() {
 	
 	//---------------------------------------------------------------- Clear the screen
 	Graphics::Instance()->BeginScene(0.2f, 0.2f, 0.4f, 1.0f);
-
 	Graphics::Instance()->EnableDepthBuffer(true);
 	Graphics::Instance()->EnableAlphaBlending(false);
 
@@ -172,10 +128,6 @@ void MenuState::Draw() {
     }
 
     ////////////////////////////////////////////////
-	// END OF 3D RENDERING
-	////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////
     //  BEGIN 2D RENDERING
     ////////////////////////////////////////////////
     Graphics::Instance()->EnableDepthBuffer(false);
@@ -189,9 +141,6 @@ void MenuState::Draw() {
     _Text->DrawString("VelocityX: " + std::to_string(XMVectorGetX(m_laraObject->GetVelocity())), -0.9f, 0.51f, XMFLOAT3(0.0f, 0.0f, 1.0f));
     _Text->DrawString("AccelX: " + std::to_string(XMVectorGetX(m_laraObject->GetAcceleration())), -0.9f, 0.43f, XMFLOAT3(1.0f, 0.0f, 1.0f));
 
-    ////////////////////////////////////////////////
-    // END OF 2D RENDERING
-    ////////////////////////////////////////////////
 	
 	//---------------------------------------------------------------- Present the rendered scene to the screen
 	Graphics::Instance()->EndScene();

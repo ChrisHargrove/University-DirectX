@@ -16,6 +16,7 @@
 #include "TerrainShader.h"
 #include "Constants.h"
 #include "AlignedAllocationPolicy.h"
+#include "TexturePackage.h"
 
 class Camera;
 
@@ -59,4 +60,6 @@ private:
 	std::vector<HeightMapData>							m_heightMap;
 	std::vector<BufferConstants::PackedTerrainVertex>	m_vertices;
 	std::vector<unsigned long>							m_indices;
+
+	TexturePackage	m_packedTextures;
 };

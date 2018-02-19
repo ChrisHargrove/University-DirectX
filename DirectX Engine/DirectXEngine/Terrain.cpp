@@ -50,6 +50,9 @@ Terrain::~Terrain()
 *******************************************************************************************************************/
 bool Terrain::Initialize(const char* fileLocation)
 {
+	//---------------------------------------------------------------- Load in the texture/texture package used for the terrain
+	if (!m_packedTextures.LoadTexturePackage("Bricks.jpg", "Grass.jpg", "Grass2.jpg", "Dirt.jpg", "BlendMap2.jpg")) { return false; }
+
 	//---------------------------------------------------------------- Load in the shaders used for the terrain
 	if (!m_terrainShader.LoadShader(L"Assets\\Shaders\\terrainShader.vs", L"Assets\\Shaders\\terrainShader.ps")) { return false; }
 
@@ -224,8 +227,8 @@ void Terrain::CalculateNormals()
 	}
 
 	XMFLOAT3 normal;
-	int	count = 0;
-	float length = 0.0f;
+	int	count		= 0;
+	float length	= 0.0f;
 
 	//---------------------------------------------------------------- Now go through all the vertices and take an average of each face normal that the vertex touches to get the averaged normal for that vertex
 	for (int y = 0; y < m_terrainHeight; y++) {
@@ -248,7 +251,7 @@ void Terrain::CalculateNormals()
 				count++;
 			}
 
-			//---------------------------------------------------------------- Bottom right face.
+			//---------------------------------------------------------------- Bottom right face
 			if ((x < (m_terrainWidth - 1)) && ((y - 1) >= 0)) {
 				
 				index = ((y - 1) * (offsetTerrainHeight)) + x;
@@ -308,9 +311,19 @@ void Terrain::SetVertexPosition(int position)
 {
 	static unsigned int index	= 0;
 
-	m_vertices[index].position	= XMFLOAT3(m_heightMap[position].x, m_heightMap[position].y, m_heightMap[position].z);
-	m_vertices[index].normal	= XMFLOAT3(m_heightMap[position].normal.x, m_heightMap[position].normal.y, m_heightMap[position].normal.z);
-	m_indices[index]			= index;
+	//---------------------------------------------------------------- Set the position of the vertices
+	m_vertices[index].position		= XMFLOAT3(m_heightMap[position].x, m_heightMap[position].y, m_heightMap[position].z);
+
+	//---------------------------------------------------------------- As we are using a blend map & multi-textures and deal with tiled terrain within the shader, we can just set the texture coordinates the same as the vertex x and z position
+	m_vertices[index].textureCoord	= XMFLOAT2(m_heightMap[position].x, m_heightMap[position].z);
+
+	//---------------------------------------------------------------- Set the normal positions for lighting calculations - normals are calculated manually in this class
+	m_vertices[index].normal		= XMFLOAT3(m_heightMap[position].normal.x, m_heightMap[position].normal.y, m_heightMap[position].normal.z);
+	
+	//---------------------------------------------------------------- Set the indices
+	m_indices[index]				= index;
+
+	//---------------------------------------------------------------- Increment index so we will move to next vertex the next time this function is called
 	index++;
 
 	//---------------------------------------------------------------- Resets the index every time we start a new game state
@@ -372,6 +385,6 @@ bool Terrain::InitializeBuffers()
 *******************************************************************************************************************/
 void Terrain::Render(Camera* camera)
 {
-	m_terrainShader.Bind(m_transform, camera, nullptr);
+	m_terrainShader.Bind(m_transform, camera, &m_packedTextures);
 		m_buffer.Render(m_stride, m_offset);
 }

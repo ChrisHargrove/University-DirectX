@@ -57,14 +57,13 @@ namespace InputConstants {
 namespace ScreenConstants {
 
 	enum WindowSpec {
-		SCREEN_WIDTH	= 1280,
-		SCREEN_HEIGHT	= 1024
+		SCREEN_WIDTH	= 800,
+		SCREEN_HEIGHT	= 600
 	};
 
 	const float FieldOfView		= (float)3.141592654f / 4.0f;
 	const float NearView		= 0.1f;
-	const float FarView			= 1000.0f;
-    const float ScreenDepth     = FarView - NearView;
+	const float FarView			= 100.0f;
 }
 
 
@@ -87,6 +86,7 @@ namespace BufferConstants {
 	struct PackedTerrainVertex
 	{
 		XMFLOAT3 position;
+		XMFLOAT2 textureCoord;
 		XMFLOAT3 normal;
 	};
 

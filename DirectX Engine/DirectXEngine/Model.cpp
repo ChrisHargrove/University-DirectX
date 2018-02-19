@@ -39,8 +39,8 @@ bool Model::Load(const char* fileLocation)
 		packedVertex[i].normal			= normals[i];
 	}
 
-	m_buffer.Push(packedVertex);
-	m_buffer.Push(indices);
+	if (!m_buffer.Push(packedVertex))	{ return false; }
+	if (!m_buffer.Push(indices))		{ return false; }
 
 	return true;
 }

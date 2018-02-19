@@ -12,7 +12,7 @@
 #include <xnamath.h>
 #include <d3dx11async.h>
 
-class Texture;
+class TexturePackage;
 class Camera;
 
 class TerrainShader {
@@ -22,15 +22,15 @@ public:
 	~TerrainShader();
 
 	bool LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation);
-	void Bind(XMMATRIX& world, Camera* camera, Texture* texture, D3D_PRIMITIVE_TOPOLOGY renderMode = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	void Bind(XMMATRIX& world, Camera* camera, TexturePackage* texturePackage, D3D_PRIMITIVE_TOPOLOGY renderMode = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 private:
 	TerrainShader(const TerrainShader&);
 
 private:
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* fileLocation);
-	bool UpdateConstantBuffers(XMMATRIX& world, Camera* camera);
-	void SetTexture(Texture* texture);
+	bool UpdateConstantBuffers(XMMATRIX& world, Camera* camera, bool enableBlending = true);
+	void SetTexturePackage(TexturePackage* texturePackage);
 
 private:
 	ID3D11VertexShader*		m_vertexShader;
@@ -39,22 +39,27 @@ private:
 
 	ID3D11Buffer*			m_matrixBuffer;
 	ID3D11Buffer*			m_lightBuffer;
-
-	ID3D11SamplerState*		m_samplerState;
+	ID3D11Buffer*			m_textureBuffer;
 
 private:
 	struct MatrixBufferData
 	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX projection;
+		XMMATRIX	world;
+		XMMATRIX	view;
+		XMMATRIX	projection;
 	};
 
 	struct LightBufferData
 	{
-		XMFLOAT4 ambientColor;
-		XMFLOAT4 diffuseColor;
-		XMFLOAT3 lightDirection;
-		float padding;
+		XMFLOAT4	ambientColor;
+		XMFLOAT4	diffuseColor;
+		XMFLOAT3	lightDirection;
+		float		lightPadding;
+	};
+
+	struct TextureBufferData
+	{
+		bool		enableBlending;
+		XMFLOAT3	texturePadding;
 	};
 };

@@ -99,6 +99,9 @@ bool TextShader::LoadShader(WCHAR * vertexFileLocation, WCHAR * pixelFileLocatio
     pixelShaderBuffer->Release();
     pixelShaderBuffer = nullptr;
 
+	//-------------------------------------------- Generate the default sampler filter settings for the textures used within this shader
+	if (!Texture::GenerateSamplerFilters()) { return false; }
+
     //Create pixel color buffer
     if (!Buffer::CreateConstantBuffer(&_PixelColorBuffer, sizeof(PixelColorBuffer))) { return false; }
 
@@ -117,6 +120,8 @@ void TextShader::Bind(Texture * texture, D3D_PRIMITIVE_TOPOLOGY renderMode)
     //-------------------------------------------- Set the vertex and pixel shaders that will be used to render this object
     Graphics::Instance()->GetDeviceContext()->VSSetShader(_VertexShader, nullptr, 0);
     Graphics::Instance()->GetDeviceContext()->PSSetShader(_PixelShader, nullptr, 0);
+
+	Graphics::Instance()->GetDeviceContext()->PSSetSamplers(0, 1, Texture::GetSampler());
 
     SetTexture(texture);
 }
@@ -165,6 +170,6 @@ void TextShader::SetTexture(Texture * texture)
 {
     if (texture != nullptr) {
         Graphics::Instance()->GetDeviceContext()->PSSetShaderResources(0, 1, texture->GetTexture());
-        Graphics::Instance()->GetDeviceContext()->PSSetSamplers(0, 1, texture->GetSampler());
+		
     }
 }

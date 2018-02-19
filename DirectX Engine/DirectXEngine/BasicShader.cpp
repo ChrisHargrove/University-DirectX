@@ -104,6 +104,9 @@ bool BasicShader::LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation
 	pixelShaderBuffer->Release();
 	pixelShaderBuffer = nullptr;
 	
+	//-------------------------------------------- Generate the default sampler filter settings for the textures used within this shader
+	if (!Texture::GenerateSamplerFilters()) { return false; }
+
 	//-------------------------------------------- Create the constant buffer within the shader, so we can access the data from the CPU
 	if (!Buffer::CreateConstantBuffer(&m_matrixBuffer, sizeof(MatrixBufferData))) { return false; }
 
@@ -199,6 +202,9 @@ void BasicShader::Bind(XMMATRIX& world, Camera* camera, Texture* texture, D3D_PR
 	Graphics::Instance()->GetDeviceContext()->PSSetShader(m_pixelShader, nullptr, 0);
 
 	UpdateConstantBuffers(world, camera);
+
+	Graphics::Instance()->GetDeviceContext()->PSSetSamplers(0, 1, Texture::GetSampler());
+
 	SetTexture(texture);
 }
 
@@ -210,6 +216,5 @@ void BasicShader::SetTexture(Texture* texture)
 {
 	if (texture != nullptr) {
 		Graphics::Instance()->GetDeviceContext()->PSSetShaderResources(0, 1, texture->GetTexture());
-		Graphics::Instance()->GetDeviceContext()->PSSetSamplers(0, 1, texture->GetSampler());
 	}
 }

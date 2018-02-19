@@ -162,7 +162,10 @@
       <Filter>Source Files\Game\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
-      <Filter>Source Files\Game\Graphics</Filter>
+      <Filter>Source Files\Game\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturePackage.cpp">
+      <Filter>Header Files\Game\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,7 +257,10 @@
       <Filter>Header Files\Game\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
-      <Filter>Header Files\Game\Graphics</Filter>
+      <Filter>Header Files\Game\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturePackage.h">
+      <Filter>Source Files\Game\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

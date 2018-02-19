@@ -3,15 +3,31 @@
 *******************************************************************************************************************/
 SamplerState 	SampleType;
 
+Texture2D		backgroundTexture	: register(t0);
+Texture2D		rTexture			: register(t1);
+Texture2D		gTexture			: register(t2);
+Texture2D		bTexture			: register(t3);
+Texture2D		blendMap			: register(t4);
+
 /*******************************************************************************************************************
 	Constant buffer data coming in from the CPU
 *******************************************************************************************************************/
 cbuffer LightBuffer
 {
-    float4 ambientColor;
-    float4 diffuseColor;
-    float3 lightDirection;
-    float padding;
+    float4	ambientColor;
+    float4	diffuseColor;
+    float3	lightDirection;
+    
+	//Unused padding variable - this is due to CB needing to be in multiples of 16. Ignore.
+	float	lightPadding;
+};
+
+cbuffer TextureBuffer
+{
+    bool	enableBlending;
+	
+	//Unused padding variable - this is due to CB needing to be in multiples of 16. Ignore.
+	float3	texturePadding;
 };
 
 
@@ -20,38 +36,77 @@ cbuffer LightBuffer
 *******************************************************************************************************************/
 struct PixelOutput
 {
-    float4 position 	: SV_POSITION;
-	float3 normal		: NORMAL;
+    float4 position 		: SV_POSITION;
+	float2 textureCoord		: TEXCOORD0;
+	float3 normal			: NORMAL;
 };
 
+float4 DetermineSingleTextureData(PixelOutput pixelOutput)
+{
+	float2 tiledCoords				= pixelOutput.textureCoord / 4.0;
+	float4 singleTextureColor		= backgroundTexture.Sample(SampleType, tiledCoords);
+
+	return singleTextureColor;
+}
+
+float4 DetermineMultiTextureData(PixelOutput pixelOutput)
+{
+	float4 blendMapColor			= blendMap.Sample(SampleType, pixelOutput.textureCoord / 256.0);
+	float  backgroundTextureAmount	= 1-(blendMapColor.r + blendMapColor.g + blendMapColor.b);
+	float2 tiledCoords				= pixelOutput.textureCoord / 4.0;
+
+	float4 backgroundTextureColor	= backgroundTexture.Sample(SampleType, tiledCoords) * backgroundTextureAmount;
+	float4 rTextureColor			= rTexture.Sample(SampleType, tiledCoords) * blendMapColor.r;
+	float4 gTextureColor			= gTexture.Sample(SampleType, tiledCoords) * blendMapColor.g;
+	float4 bTextureColor			= bTexture.Sample(SampleType, tiledCoords) * blendMapColor.b;
+
+	float4 multiTextureColor		= backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+	
+	return multiTextureColor;
+}
+
+
+float4 CalculateLighting(PixelOutput pixelOutput, float4 baseColor)
+{
+	// Invert the light direction for calculations.
+    float3 invertedLightDirection	= -lightDirection;
+
+    // Calculate the amount of light on this pixel.
+    float lightIntensity			= saturate(dot(pixelOutput.normal, invertedLightDirection));
+
+    if(lightIntensity > 0.0f)
+    {
+        // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
+        baseColor += (diffuseColor * lightIntensity);
+    }
+
+	return baseColor;
+}
+
+float4 DetermineColorData()
+{
+	// Set the default output color to the ambient light value for all pixels.
+    float4 baseColor	= ambientColor;
+
+	return baseColor;
+}
 
 /*******************************************************************************************************************
 	Main Function
 *******************************************************************************************************************/
 float4 PixelMain(PixelOutput pixelOutput) : SV_TARGET
 {
-      float3 lightDir;
-    float lightIntensity;
-    float4 color;
+	float4 baseColor	= DetermineColorData();
+	baseColor			= CalculateLighting(pixelOutput, baseColor);
+	float4 textureColor;
 
+	if (enableBlending) { textureColor = DetermineMultiTextureData(pixelOutput); }
+	else				{ textureColor = DetermineSingleTextureData(pixelOutput); }
+	
+	baseColor			= baseColor * textureColor;
+	    
+	// Saturate the final light color.
+	baseColor			= saturate(baseColor);
 
-    // Set the default output color to the ambient light value for all pixels.
-    color = ambientColor;
-
-    // Invert the light direction for calculations.
-    lightDir = -lightDirection;
-
-    // Calculate the amount of light on this pixel.
-    lightIntensity = saturate(dot(pixelOutput.normal, lightDir));
-
-    if(lightIntensity > 0.0f)
-    {
-        // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
-        color += (diffuseColor * lightIntensity);
-    }
-
-    // Saturate the final light color.
-    color = saturate(color);
-
-    return color;
+    return baseColor;
 }

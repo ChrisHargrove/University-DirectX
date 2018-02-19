@@ -1,6 +1,8 @@
 #pragma once
 
 #include <d3d11.h>
+#include <array>
+#include <string>
 
 class Texture {
 
@@ -9,17 +11,25 @@ public:
 	~Texture();
 
 public:
-	ID3D11ShaderResourceView* const* GetTexture()	{ return &m_texture; }
-	ID3D11SamplerState* const* GetSampler()			{ return &m_textureSampler; }
+	ID3D11ShaderResourceView** GetTexture()			{ return &m_texture; }
+	static ID3D11SamplerState* const* GetSampler()	{ return &m_defaultSampler; }
+
+	float GetHeight() { return _Height; }
+	float GetWidth() { return _Width; }
 
 public:
-	bool LoadTexture(const char* fileLocation);
-    float GetWidth() { return _Width; }
-    float GetHeight() { return _Height; }
+	bool LoadTexture(const std::string& texture);
+
+public:
+	static bool GenerateSamplerFilters();
+
+protected:
+	bool GenerateTexture(const std::string& fileLocation, ID3D11ShaderResourceView** texture);
 
 private:
-    float _Width, _Height;
-
 	ID3D11ShaderResourceView*	m_texture;
-	ID3D11SamplerState*			m_textureSampler;
+
+	float _Height, _Width;
+
+	static ID3D11SamplerState*	m_defaultSampler;
 };
