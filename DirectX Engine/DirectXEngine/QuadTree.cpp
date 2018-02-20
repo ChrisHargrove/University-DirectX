@@ -1,5 +1,6 @@
 #include "QuadTree.h"
 #include "Camera.h"
+#include "Log.h"
 
 #include <iostream>
 
@@ -82,7 +83,7 @@ void QuadTree::FindNode(QuadType * node, float x , float z, float & height)
 
 	// If there were no children then the polygon must be in this node.  Check all the polygons in this node to find 
 	// the height of which one the polygon we are looking for.
-	for (i = 0; i<node->_Buffer.GetTerrainVertexCount() / 3; i++)
+	for (i = 0; i<node->_Buffer.GetVertexCount() / 3; i++)
 	{
 		index = i * 3;
 		vertex1[0] = node->_VertexArray[index].position.x;
@@ -253,7 +254,7 @@ bool QuadTree::Initialize(Terrain * terrain)
 	_Terrain = new Terrain();
 	if (!_Terrain->Initialize("Assets\\Terrain\\heightMap.bmp")) { return false; }
 	//get number of verts
-	vertCount = _Terrain->GetTerrainIndexCount();
+	vertCount = _Terrain->GetBuffer()->GetVertexCount();
 	//store total triangle copunt for vertex list.
 	_TriCount = vertCount / 3;
 	//cop vertices into the new array
@@ -270,7 +271,7 @@ bool QuadTree::Initialize(Terrain * terrain)
 	//once quadtree is built
 	_VertexList.clear();	//be careful now :P
 
-
+	DX_LOG("[QUADTREE] Quad Tree Successfully Created!", DX_LOG_EMPTY, LOG_SUCCESS);
 	return true;
 }
 
@@ -336,17 +337,13 @@ void QuadTree::CreateQuadNode(QuadType * parent, float posX, float posZ, float w
 	parent->_Width = width;
 
 	//init child nodes to nullptr;
-	for (int i = 0; i < 4; i++) {
-		parent->_ChildQuads[i] = nullptr;
-	}
+	for (int i = 0; i < 4; i++) { parent->_ChildQuads[i] = nullptr;	}
 
 	//count triangle count
 	numTri = CountTriangles(posX, posZ, width);
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CASE 1~~~~~~~~~~~~~~~~~No Triangles
-	if (numTri == 0) {
-		return;
-	}
+	if (numTri == 0) { return; }
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CASE 2~~~~~~~~~~~~~~~~~Too Many Triangles
 	if (numTri > MAX_TRIANGLES) {
@@ -368,7 +365,6 @@ void QuadTree::CreateQuadNode(QuadType * parent, float posX, float posZ, float w
 	}
 	
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CASE 3~~~~~~~~~~~~~~~~~Load Data!
-
 	// Calculate the number of vertices.
 	vertCount = numTri * 3;
 
@@ -417,8 +413,6 @@ void QuadTree::CreateQuadNode(QuadType * parent, float posX, float posZ, float w
 	if (!parent->_Buffer.Push(vertices)) { return; };
 	if (!parent->_Buffer.Push(indices)) { return; };
 
-	//parent->_Buffer.SetTerrainVertexCount(vertices.size());
-	//parent->_Buffer.SetTerrainIndexCount(indices.size());
 }
 
 int QuadTree::CountTriangles(float posX, float posZ, float width)
@@ -551,5 +545,5 @@ void QuadTree::RenderQuad(QuadType * quad, Frustum * frustum, TerrainShader * sh
 	quad->_Buffer.Render(stride, 0);
 
 	// Increase the count of the number of polygons that have been rendered during this frame.
-	_DrawCount += quad->_Buffer.GetTerrainIndexCount() / 3;
+	_DrawCount += quad->_Buffer.GetIndexCount() / 3;
 }

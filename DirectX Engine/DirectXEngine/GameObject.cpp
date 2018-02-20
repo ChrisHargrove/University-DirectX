@@ -24,7 +24,7 @@ GameObject::GameObject(const XMFLOAT3& Position, Model* Model, Texture* texture)
 
 	//Shouldn't be done here - either a rendering engine or create shaders in gamestates and pass in to
 	//render function of game objects
-	m_basicShader.LoadShader(L"Assets\\Shaders\\basicShader.vs", L"Assets\\Shaders\\basicShader.ps");
+	m_basicShader.LoadShader(L"basicShader.vs", L"basicShader.ps");
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -142,18 +142,13 @@ void GameObject::CalculateRotationMatrix()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GameObject::Update()
 {
-	//deviceContext->UpdateSubresource(m_worldBuffer, 0, 0, &GetWorldMatrix(), 0, 0);
-	//deviceContext->VSSetConstantBuffers(0, 1, &m_worldBuffer);
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void GameObject::Render(Camera* camera) {
 	
 	m_basicShader.Bind(_WorldMatrix, camera, _ObjectTexture);
-
-	//only enable these lines when using a shader that supports textures
-	//Graphics::Instance()->GetDeviceContext()->PSSetShaderResources(0, 1, m_objectTexture->GetTexture());
-	//Graphics::Instance()->GetDeviceContext()->PSSetSamplers(0, 1, m_objectTexture->GetSampler());
 
 	_ObjectModel->Render();
 }

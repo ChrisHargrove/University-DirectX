@@ -78,11 +78,14 @@
     <Filter Include="Source Files\Game\GameObjects">
       <UniqueIdentifier>{5f0fd156-40b1-47c2-9b00-46b1152f811d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game\Graphics\Renderers">
+      <UniqueIdentifier>{cf96c0b4-828a-4f13-ae93-76e5a8b6c084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Graphics\Renderers">
+      <UniqueIdentifier>{c49e476f-40b8-42b3-9b84-0a9c3e09d74e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Game\GameComponents</Filter>
     </ClCompile>
@@ -164,17 +167,17 @@
     <ClCompile Include="Frustum.cpp">
       <Filter>Source Files\Game\GameComponents</Filter>
     </ClCompile>
-    <ClCompile Include="TexturePackage.cpp">
-      <Filter>Header Files\Game\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files\Game\GameComponents</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files\Engine\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturePackage.cpp">
+      <Filter>Source Files\Game\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Game\GameComponents</Filter>
     </ClInclude>
@@ -262,11 +265,14 @@
     <ClInclude Include="Frustum.h">
       <Filter>Header Files\Game\GameComponents</Filter>
     </ClInclude>
-    <ClInclude Include="TexturePackage.h">
-      <Filter>Source Files\Game\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>Header Files\Game\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files\Engine\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturePackage.h">
+      <Filter>Header Files\Game\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

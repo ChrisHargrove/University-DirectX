@@ -56,6 +56,7 @@ public:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     bool DrawString(const std::string& message, float posX, float posY, XMFLOAT3 color = XMFLOAT3(1.0f,1.0f,1.0f));
 
+	Texture* GetTexture() { return _Texture; }
 private:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Member Variables.

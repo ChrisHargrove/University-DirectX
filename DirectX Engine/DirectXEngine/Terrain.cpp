@@ -54,7 +54,7 @@ bool Terrain::Initialize(const char* fileLocation)
 	if (!m_packedTextures.LoadTexturePackage("Bricks.jpg", "Grass.jpg", "Grass2.jpg", "Dirt.jpg", "BlendMap2.jpg")) { return false; }
 
 	//---------------------------------------------------------------- Load in the shaders used for the terrain
-	if (!m_terrainShader.LoadShader(L"Assets\\Shaders\\terrainShader.vs", L"Assets\\Shaders\\terrainShader.ps")) { return false; }
+	if (!m_terrainShader.LoadShader(L"terrainShader.vs", L"terrainShader.ps")) { return false; }
 
 	//---------------------------------------------------------------- Load in the heightmap for the terrain
 	if (!LoadHeightMap(fileLocation)) { return false; }
@@ -342,9 +342,6 @@ bool Terrain::InitializeBuffers()
 
 	//---------------------------------------------------------------- Calculate number of vertices in terrain mesh (12 points/vertices to make 1 face - 2 x triangles, 6 points per triangle
 	unsigned int vertexCount = (offsetTerrainWidth) * (offsetTerrainHeight) * FileConstants::HEIGHTMAP_VERTICES;
-
-	//---------------------------------------------------------------- Set the vertex count of the buffer object
-	//m_buffer.SetTerrainVertexCount(vertexCount);
 	
 	//---------------------------------------------------------------- Set the index count to the same as the vertex count (create a temporary indexCount variable for readability purposes only)
 	unsigned int indexCount = vertexCount;
@@ -387,3 +384,10 @@ void Terrain::Render(Camera* camera)
 	m_terrainShader.Bind(m_transform, camera, &m_packedTextures);
 		m_buffer.Render(m_stride, m_offset);
 }
+
+
+/*******************************************************************************************************************
+	Accessor Methods
+*******************************************************************************************************************/
+Buffer* Terrain::GetBuffer()													{ return &m_buffer; }
+std::vector<BufferConstants::PackedTerrainVertex>*	Terrain::GetTerrainVerts()	{ return &m_vertices; }

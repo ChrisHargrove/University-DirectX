@@ -36,24 +36,27 @@ BasicShader::~BasicShader()
 /*******************************************************************************************************************
 	Function that loads in a vertex and pixel shader
 *******************************************************************************************************************/
-bool BasicShader::LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation)
+bool BasicShader::LoadShader(const std::wstring& vertexFileLocation, const std::wstring& pixelFileLocation)
 {
 	HRESULT result = S_OK;
+
+	std::wstring vertexFile = L"Assets\\Shaders\\" + vertexFileLocation;
+	std::wstring pixelFile	= L"Assets\\Shaders\\" + pixelFileLocation;
 
 	ID3D10Blob* errorMessage		= nullptr;
 	ID3D10Blob* vertexShaderBuffer	= nullptr;
 
 	//-------------------------------------------- Compile the vertex shader code
-	result = D3DCompileFromFile(vertexFileLocation, nullptr, nullptr, "VertexMain", "vs_4_0",
+	result = D3DCompileFromFile(vertexFile.c_str(), nullptr, nullptr, "VertexMain", "vs_4_0",
 		D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
 
 	if (FAILED(result))
 	{	
 		//-------------------------------------------- If the shader failed to compile it should have writen something to the error message
-		if (errorMessage) { OutputShaderErrorMessage(errorMessage, vertexFileLocation); }
+		if (errorMessage) { OutputShaderErrorMessage(errorMessage, vertexFile.c_str()); }
 		
 		//-------------------------------------------- If there was  nothing in the error message then it simply could not find the shader file itself
-		else { MessageBox(Screen::Instance()->GetWindow(), (LPCSTR)vertexFileLocation, "Missing Shader File", MB_OK); }
+		else { MessageBox(Screen::Instance()->GetWindow(), (LPCSTR)vertexFile.c_str(), "Missing Shader File", MB_OK); }
 
 		return false;
 	}
@@ -61,13 +64,13 @@ bool BasicShader::LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation
 	ID3D10Blob* pixelShaderBuffer = nullptr;
 
 	//-------------------------------------------- Compile the pixel shader code
-	result = D3DCompileFromFile(pixelFileLocation, nullptr, nullptr, "PixelMain", "ps_4_0",
+	result = D3DCompileFromFile((LPCWSTR)pixelFile.c_str(), nullptr, nullptr, "PixelMain", "ps_4_0",
 		D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
 
 	if (FAILED(result))
 	{
-		if (errorMessage) { OutputShaderErrorMessage(errorMessage, pixelFileLocation); }
-		else { MessageBox(Screen::Instance()->GetWindow(), (LPCSTR)pixelFileLocation, "Missing Shader File", MB_OK); }
+		if (errorMessage) { OutputShaderErrorMessage(errorMessage, pixelFile.c_str()); }
+		else { MessageBox(Screen::Instance()->GetWindow(), (LPCSTR)pixelFile.c_str(), "Missing Shader File", MB_OK); }
 
 		return false;
 	}
@@ -117,7 +120,7 @@ bool BasicShader::LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation
 /*******************************************************************************************************************
 	Function that outputs any shader errors generated to a file
 *******************************************************************************************************************/
-void BasicShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* fileLocation)
+void BasicShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, const WCHAR* fileLocation)
 {
 	std::ofstream file;
 

@@ -16,6 +16,7 @@
 #include <d3d11.h>
 #include <xnamath.h>
 #include <d3dx11async.h>
+#include <string>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //  Forward Declartions
@@ -45,7 +46,7 @@ public:
     //  --vertexFileLocation-- The file location for the vertexShader
     //  --pixelFileLocation-- The file lcoation for the pixelShader
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    bool LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation);
+    bool LoadShader(const std::wstring& vertexFileLocation, const std::wstring& pixelFileLocation);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Binds the shader to current use and sets all the buffers to be active in sahder.
@@ -64,7 +65,7 @@ private:
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Outputs an error if something goes wrong.
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    void OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* fileLocation);
+    void OutputShaderErrorMessage(ID3D10Blob* errorMessage, const WCHAR* fileLocation);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //  Sets the texture to be used by GPU when rendering.

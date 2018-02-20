@@ -1,5 +1,12 @@
 #pragma once
+/*******************************************************************************************************************
+	Texture.h, Texture.cpp
+	Created by Kim Kane & Chris Hargrove
+	Last updated: 19/02/2018
 
+	Creates a texture object using the DirectX API and loads in a texture from a file.
+
+*******************************************************************************************************************/
 #include <d3d11.h>
 #include <array>
 #include <string>
@@ -11,8 +18,8 @@ public:
 	~Texture();
 
 public:
-	ID3D11ShaderResourceView** GetTexture()			{ return &m_texture; }
-	static ID3D11SamplerState* const* GetSampler()	{ return &m_defaultSampler; }
+	ID3D11ShaderResourceView** GetTexture();
+	static ID3D11SamplerState* const* GetSampler();
 
 	float GetHeight() { return _Height; }
 	float GetWidth() { return _Width; }

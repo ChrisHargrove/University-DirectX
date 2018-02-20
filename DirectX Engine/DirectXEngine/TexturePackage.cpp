@@ -1,13 +1,24 @@
 #include "TexturePackage.h"
 
+/*******************************************************************************************************************
+	Constructor with initializer list to set all default values of variables
+*******************************************************************************************************************/
 TexturePackage::TexturePackage()
 {
 }
 
+
+/*******************************************************************************************************************
+	Shut down all necessary procedures, release resources and clean up memory
+*******************************************************************************************************************/
 TexturePackage::~TexturePackage()
 {
 }
 
+
+/*******************************************************************************************************************
+	Function that loads in 5 x texture files for terrain multitexturing and stores them in to packed textures array
+*******************************************************************************************************************/
 bool TexturePackage::LoadTexturePackage(const std::string& backgroundTexture, const std::string& rTexture, const std::string& gTexture, const std::string& bTexture, const std::string& blendMap)
 {
 	std::string fileLocation = "Assets\\Textures\\Terrain\\";
@@ -21,4 +32,8 @@ bool TexturePackage::LoadTexturePackage(const std::string& backgroundTexture, co
 	return true;
 }
 
+
+/*******************************************************************************************************************
+	Function that returns a texture within the packed textures array at a given index
+*******************************************************************************************************************/
 Texture* TexturePackage::GetPackedTexture(int index) { return &m_packedTextures[index]; }

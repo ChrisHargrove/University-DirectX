@@ -11,6 +11,7 @@
 #include <d3d11.h>
 #include <xnamath.h>
 #include <d3dx11async.h>
+#include <string>
 
 class Texture;
 class Camera;
@@ -21,14 +22,14 @@ public:
 	BasicShader();
 	~BasicShader();
 
-	bool LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation);
+	bool LoadShader(const std::wstring& vertexFileLocation, const std::wstring& pixelFileLocation);
 	void Bind(XMMATRIX& world, Camera* camera, Texture* texture, D3D_PRIMITIVE_TOPOLOGY renderMode = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 private:
 	BasicShader(const BasicShader&);
 
 private:
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* fileLocation);
+	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, const WCHAR* fileLocation);
 	bool UpdateConstantBuffers(XMMATRIX& world, Camera* camera);
 	void SetTexture(Texture* texture);
 

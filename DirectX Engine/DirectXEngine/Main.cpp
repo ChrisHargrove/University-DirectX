@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "GameManager.h"
 
 int main() {
 
@@ -17,12 +17,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	//---------------------------------------------------------------- Game title, fullscreen, vSync
-	if (!MainGame::Instance()->Initialize(hInstance, "DirectX Game", false, true)) { 
-		MainGame::Instance()->Shutdown(); return 0; 
+	if (!Game::Instance()->Initialize(hInstance, "DirectX Game", false, true)) { 
+		Game::Instance()->Shutdown(); return 0; 
 	}
 	
-	MainGame::Instance()->Run();
-	MainGame::Instance()->Shutdown();
+	Game::Instance()->Run();
+	Game::Instance()->Shutdown();
 
 	return 0;
 }

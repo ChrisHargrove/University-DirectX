@@ -24,7 +24,7 @@ Text::Text(Texture* texture, TextShader* shaderPtr)
         DX_LOG("Text failed to create Buffer", DX_LOG_EMPTY, LOG_ERROR);
     }
     //Load the shader.
-    _Shader.LoadShader(L"Assets\\Shaders\\fontShader.vs", L"Assets\\Shaders\\fontShader.ps");
+    _Shader.LoadShader(L"fontShader.vs", L"fontShader.ps");
 
 }
 

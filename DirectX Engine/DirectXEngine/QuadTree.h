@@ -30,8 +30,6 @@ public:
 	void FindNode(QuadType*, float, float, float&);
 	bool CheckHeightOfTriangle(float, float, float&, float[3], float[3], float[3]);
 
-
-
 	bool Initialize(Terrain* terrain);
 	void Render(Frustum* frustum, TerrainShader* shader, Camera* camera);
 	int GetDrawCount() { return _DrawCount; }
@@ -51,7 +49,7 @@ private:
 
 	QuadType*	_ParentQuad;
 
-	const unsigned int MAX_TRIANGLES = 5000;
+	const unsigned int MAX_TRIANGLES = 10000;
 
 	Terrain* _Terrain;
 

@@ -5,6 +5,21 @@
 #include "Log.h"
 
 /*******************************************************************************************************************
+Constructor with initializer list to set default values of data members
+*******************************************************************************************************************/
+Camera::Camera()	:	m_position(0.0f, 0.0f, 0.0f),
+						m_rotation(0.0f, 0.0f, 0.0f),
+						m_up(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)),
+						m_forward(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f)),
+						m_right(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f)),
+						m_target(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f))
+
+{
+	DX_LOG("[CAMERA] Camera constructor initialized", DX_LOG_EMPTY, LOG_MESSAGE);
+}
+
+
+/*******************************************************************************************************************
 	Constructor with initializer list to set default values of data members
 *******************************************************************************************************************/
 Camera::Camera(float x, float y, float z) :	m_position(x, y, z),

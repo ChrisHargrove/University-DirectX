@@ -12,6 +12,7 @@
 #include <d3d11.h>
 #include <xnamath.h>
 #include <vector>
+
 #include "Buffer.h"
 #include "TerrainShader.h"
 #include "Constants.h"
@@ -29,10 +30,14 @@ public:
 	bool Initialize(const char* fileLocation);
 	void Render(Camera* camera);
 
-	int GetTerrainIndexCount() { return m_buffer.GetIndexCount(); }
-	std::vector<BufferConstants::PackedTerrainVertex>*	GetTerrainVerts() { return &m_vertices; }
+public:
+	Buffer* GetBuffer();
+	std::vector<BufferConstants::PackedTerrainVertex>*	GetTerrainVerts();
 
-	//we are not keeping this!!! >:(
+	const XMMATRIX& GetWorldMatrix() { return m_transform; }
+
+
+	//we are not keeping this!!! >:( :)
 	TerrainShader* GetShader() { return &m_terrainShader; }
 	TexturePackage* GetPackage() { return &m_packedTextures; }
 
@@ -68,5 +73,5 @@ private:
 	std::vector<BufferConstants::PackedTerrainVertex>	m_vertices;
 	std::vector<unsigned long>							m_indices;
 
-	TexturePackage	m_packedTextures;
+	TexturePackage										m_packedTextures;
 };

@@ -11,6 +11,7 @@
 #include <d3d11.h>
 #include <xnamath.h>
 #include <d3dx11async.h>
+#include <string>
 
 class TexturePackage;
 class Camera;
@@ -21,14 +22,14 @@ public:
 	TerrainShader();
 	~TerrainShader();
 
-	bool LoadShader(WCHAR* vertexFileLocation, WCHAR* pixelFileLocation);
+	bool LoadShader(const std::wstring& vertexFileLocation, const std::wstring& pixelFileLocation);
 	void Bind(XMMATRIX& world, Camera* camera, TexturePackage* texturePackage, D3D_PRIMITIVE_TOPOLOGY renderMode = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 private:
 	TerrainShader(const TerrainShader&);
 
 private:
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* fileLocation);
+	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, const std::wstring& fileLocation);
 	bool UpdateConstantBuffers(XMMATRIX& world, Camera* camera, bool enableBlending = true);
 	void SetTexturePackage(TexturePackage* texturePackage);
 

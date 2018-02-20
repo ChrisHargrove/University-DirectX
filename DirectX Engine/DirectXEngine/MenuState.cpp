@@ -1,5 +1,5 @@
 #include "MenuState.h"
-#include "Game.h"
+#include "GameManager.h"
 #include "ScreenManager.h"
 #include "GraphicsManager.h"
 #include "InputManager.h"
@@ -86,7 +86,7 @@ void MenuState::Update(float deltaTime) {
 
 	//---------------------------------------------------------------- If return pressed, delete this state and create a new play state
 	if (Input::Instance()->IsKeyPressed(DIK_RETURN)) {
-		MainGame::Instance()->PermanentState(new PlayState(this));
+		Game::Instance()->PermanentState(new PlayState(this));
 		IsActive() = IsAlive() = false;
 	}
 

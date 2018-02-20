@@ -4,18 +4,27 @@
 #include "GraphicsManager.h"
 #include "Log.h"
 
+/*******************************************************************************************************************
+	Constructor with initializer list to set all default values of variables
+*******************************************************************************************************************/
 Texture::Texture()	:	m_texture(nullptr)
 {
-
 }
 
 
+/*******************************************************************************************************************
+	Shut down all necessary procedures, release resources and clean up memory
+*******************************************************************************************************************/
 Texture::~Texture()
 {
-	if (m_defaultSampler)	m_defaultSampler->Release(); m_defaultSampler = nullptr;
 	if (m_texture)			m_texture->Release(); m_texture = nullptr;
+	if (m_defaultSampler)	m_defaultSampler->Release(); m_defaultSampler = nullptr;
 }
 
+
+/*******************************************************************************************************************
+	Function that generates a texture object using DirectX API
+*******************************************************************************************************************/
 bool Texture::GenerateTexture(const std::string& fileLocation, ID3D11ShaderResourceView** texture)
 {
 	HRESULT result = S_OK;
@@ -24,13 +33,40 @@ bool Texture::GenerateTexture(const std::string& fileLocation, ID3D11ShaderResou
 	D3DX11GetImageInfoFromFile(fileLocation.c_str(), nullptr, &info, nullptr);
 
 	_Height = info.Height;
-	_Width = info.Width;
+	_Width	= info.Width;
 
 	result = D3DX11CreateShaderResourceViewFromFile(Graphics::Instance()->GetDevice(), fileLocation.c_str(), nullptr, nullptr, texture, nullptr);
 	if (FAILED(result)) { DX_LOG("[TEXTURE] Failed to create texture: ", fileLocation.c_str(), LOG_ERROR); return false; }
 
 	return true;
 }
+
+
+/*******************************************************************************************************************
+	Function that loads in a texture
+*******************************************************************************************************************/
+bool Texture::LoadTexture(const std::string& texture)
+{
+	std::string fileLocation = "Assets\\Textures\\";
+
+	if (!GenerateTexture(fileLocation + texture, &m_texture)) { return false; }
+	
+	return true;
+}
+
+
+/*******************************************************************************************************************
+	Accessor Methods
+*******************************************************************************************************************/
+ID3D11ShaderResourceView** Texture::GetTexture() { return &m_texture; }
+ID3D11SamplerState* const* Texture::GetSampler() { return &m_defaultSampler; }
+
+
+/*******************************************************************************************************************
+	Static variables and functions
+*******************************************************************************************************************/
+ID3D11SamplerState* Texture::m_defaultSampler = nullptr;
+
 
 bool Texture::GenerateSamplerFilters()
 {
@@ -73,16 +109,3 @@ bool Texture::GenerateSamplerFilters()
 
 	return true;
 }
-
-bool Texture::LoadTexture(const std::string& texture)
-{
-	std::string fileLocation = "Assets\\Textures\\";
-
-	if (!GenerateTexture(fileLocation + texture, &m_texture)) { return false; }
-	
-	return true;
-}
-
-
-
-ID3D11SamplerState* Texture::m_defaultSampler = nullptr;

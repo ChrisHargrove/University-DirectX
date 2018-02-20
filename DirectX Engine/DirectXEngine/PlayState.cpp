@@ -1,5 +1,5 @@
 #include "PlayState.h"
-#include "Game.h"
+#include "GameManager.h"
 #include "Log.h"
 #include "ScreenManager.h"
 #include "GraphicsManager.h"
@@ -62,7 +62,7 @@ void PlayState::Update(float deltaTime) {
 
 	//---------------------------------------------------------------- If space pressed, delete this state and create a new menu state
 	if (Input::Instance()->IsKeyPressed(DIK_SPACE)) {
-		MainGame::Instance()->PermanentState(new MenuState(this));
+		Game::Instance()->PermanentState(new MenuState(this));
 		IsActive() = IsAlive() = false;
 	}
 }

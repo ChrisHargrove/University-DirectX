@@ -14,6 +14,7 @@
 class Camera {
 
 public:
+	Camera();
 	Camera(float x, float y, float z);
 	~Camera();
 
